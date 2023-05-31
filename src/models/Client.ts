@@ -1010,6 +1010,7 @@ export interface ItemDetail {
   isOpenable: boolean;
   itemLevel: number;
   enhancementCosts: Cost[] | null;
+  protectionItemHrids: string[] | null;
   equipmentDetail: EquipmentDetail;
   consumableDetail: ConsumableDetail;
   abilityBookDetail: AbilityBookDetail;

@@ -6,6 +6,7 @@ import {
   NumberInput,
   Select,
   Tooltip,
+  Text,
 } from "@mantine/core";
 import { ApiData } from "../services/ApiService";
 import EnhancingCalc from "./EnhancingCalc";
@@ -14,6 +15,8 @@ import { ActionType } from "../models/Client";
 interface Props {
   data: ApiData;
 }
+
+const skillName = "enhancing";
 
 export default function Enhancing({ data }: Props) {
   const [item, setItem] = useState<string | null>(null);
@@ -35,6 +38,20 @@ export default function Enhancing({ data }: Props) {
         })),
     [data.itemDetails]
   );
+
+  const teaLevelBonus = teas.some((x) => x === `/items/super_${skillName}_tea`)
+    ? 6
+    : teas.some((x) => x === `/items/${skillName}_tea`)
+    ? 3
+    : 0;
+
+  const getTeaError = () => {
+    if (teas.length === 0) return null;
+
+    if (teas.filter((x) => x.includes(`${skillName}_tea`)).length > 1) {
+      return `Cannot use both ${skillName} teas.`;
+    }
+  };
 
   const items = useMemo(
     () =>
@@ -72,6 +89,13 @@ export default function Enhancing({ data }: Props) {
           label="Enhancing Level"
           withAsterisk
           hideControls
+          rightSection={
+            teaLevelBonus && (
+              <>
+                <Text c="#EE9A1D">+{teaLevelBonus}</Text>
+              </>
+            )
+          }
         />
         <NumberInput
           value={toolBonus}
@@ -93,6 +117,7 @@ export default function Enhancing({ data }: Props) {
             onChange={setTeas}
             label="Teas"
             maxSelectedValues={3}
+            error={getTeaError()}
           />
         </Tooltip>
       </Group>

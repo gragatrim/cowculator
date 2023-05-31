@@ -1,10 +1,11 @@
-import { Flex, Grid, Loader, NumberInput, Table, Tooltip } from "@mantine/core";
+import { Flex, Loader, NumberInput, Table, Title } from "@mantine/core";
 import { ApiData } from "../services/ApiService";
 import { Cost, ItemDetail } from "../models/Client";
 import { MarketValue } from "../models/Market";
 import { useState } from "react";
-import { IconInfoCircle } from "@tabler/icons-react";
 import { getFriendlyIntString } from "../helpers/Formatting";
+import Icon from "./Icon";
+import { Duration } from "luxon";
 
 interface Props {
   data: ApiData;
@@ -28,7 +29,7 @@ export default function EnhancingCalc({
 }: Props) {
   const toolBonus = toolPercent * 0.01;
   const action = data.actionDetails["/actions/enhancing/enhance"];
-
+  const [protCostOverride, setProtCostOverride] = useState<number | "">("");
   const [priceOverrides, setPriceOverrides] = useState<{
     [key: string]: number | "";
   }>({});
@@ -51,22 +52,31 @@ export default function EnhancingCalc({
     (action.baseTimeCost / 1000000000) *
     Math.min(1, 100 / (100 + level - item.itemLevel));
 
+  const getApproxValue = (hrid: string): number => {
+    if (hrid === "/items/coin") return 1;
+
+    if (priceOverrides[hrid]) return +priceOverrides[hrid];
+
+    const item = data.itemDetails[hrid];
+
+    if (item.ask === -1 && item.bid === -1) {
+      return item.sellPrice;
+    } else if (item.ask === -1) {
+      return item.bid;
+    } else if (item.bid === -1) {
+      return item.ask;
+    } else {
+      return +((item.ask + item.bid) / 2).toFixed(0);
+    }
+  };
+
   const getAveragePrice = (items: Cost[] | null): number => {
     let price = 0;
 
     if (!items) return price;
 
     price = items
-      .map((y) => {
-        if (y.itemHrid === "/items/coin") return y.count;
-
-        const item = data.itemDetails[y.itemHrid];
-
-        const averageCost =
-          priceOverrides[y.itemHrid] || +((item.ask + item.bid) / 2).toFixed(0);
-
-        return y.count * averageCost;
-      })
+      .map((y) => y.count * getApproxValue(y.itemHrid))
       .reduce((acc, val) => acc + val);
 
     return price;
@@ -105,8 +115,24 @@ export default function EnhancingCalc({
     return N + 1;
   }
   const costPerEnhance = getAveragePrice(item.enhancementCosts);
-  const protectionItems: Cost[] = [{ count: 1, itemHrid: item.hrid }];
-  const protectionCost = getAveragePrice(protectionItems);
+  const extraProtItems: Cost[] =
+    item.protectionItemHrids?.map((y) => ({ count: 1, itemHrid: y } as Cost)) ??
+    [];
+  const protectionItems: Cost[] = extraProtItems.concat([
+    { count: 1, itemHrid: item.hrid },
+    {
+      itemHrid: "/items/mirror_of_protection",
+      count: 1,
+    },
+  ]);
+
+  const protectionCost =
+    protCostOverride ||
+    protectionItems.reduce((acc, val) => {
+      const cost = getApproxValue(val.itemHrid);
+      if (acc === -1 || cost < acc) return cost;
+      return acc;
+    }, -1);
 
   const pCol = TARGET_COL.map((x) => (x === 0 ? 0 : X(x - 1)));
   const sCol = TARGET_COL.map((x) => S(x));
@@ -200,13 +226,46 @@ export default function EnhancingCalc({
 
   const averageEnhanceXp = getAverageEnhanceXp();
 
-  const marketRows = item.enhancementCosts.concat(protectionItems).map((x) => {
+  const protectionItemRows = protectionItems.map((x) => {
+    const marketItem = data.itemDetails[x.itemHrid];
+    return (
+      <tr>
+        <td>
+          <Flex
+            justify="flex-start"
+            align="center"
+            direction="row"
+            wrap="wrap"
+            gap="xs"
+          >
+            <Icon hrid={x.itemHrid} /> {marketItem.name}
+          </Flex>
+        </td>
+        <td>{getFriendlyIntString(marketItem.ask)}</td>
+        <td>{getFriendlyIntString(marketItem.bid)}</td>
+        <td>{getFriendlyIntString(marketItem.sellPrice)}</td>
+      </tr>
+    );
+  });
+
+  const marketRows = item.enhancementCosts.map((x) => {
     if (x.itemHrid === "/items/coin") {
       return (
         <tr key={"override/enhancing/" + x.itemHrid}>
-          <td>Coin</td>
+          <td>
+            <Flex
+              justify="flex-start"
+              align="center"
+              direction="row"
+              wrap="wrap"
+              gap="xs"
+            >
+              <Icon hrid={x.itemHrid} /> Coin
+            </Flex>
+          </td>
           <td>{x.count}</td>
           <td colSpan={3} />
+          <td>1</td>
         </tr>
       );
     }
@@ -214,13 +273,26 @@ export default function EnhancingCalc({
     const marketItem = data.itemDetails[x.itemHrid];
     return (
       <tr key={"override/enhancing/" + x.itemHrid}>
-        <td>{marketItem.name}</td>
+        <td>
+          <Flex
+            justify="flex-start"
+            align="center"
+            direction="row"
+            wrap="wrap"
+            gap="xs"
+          >
+            <Icon hrid={x.itemHrid} /> {marketItem.name}
+          </Flex>
+        </td>
         <td>{x.count}</td>
-        <td>{marketItem.ask}</td>
-        <td>{marketItem.bid}</td>
+        <td>{getFriendlyIntString(marketItem.ask)}</td>
+        <td>{getFriendlyIntString(marketItem.bid)}</td>
+        <td>{getFriendlyIntString(marketItem.sellPrice)}</td>
         <td>
           <NumberInput
             hideControls
+            placeholder={getFriendlyIntString(getApproxValue(x.itemHrid))}
+            disabled={x.itemHrid === "/items/coin"}
             value={priceOverrides[x.itemHrid]}
             onChange={(y) =>
               setPriceOverrides({
@@ -242,40 +314,111 @@ export default function EnhancingCalc({
       direction="column"
       wrap="wrap"
     >
-      <Grid>
-        <Grid.Col span="auto">
+      <NumberInput
+        label="Protection Cost"
+        hideControls
+        placeholder={getFriendlyIntString(protectionCost)}
+        min={1}
+        value={protCostOverride}
+        onChange={setProtCostOverride}
+      />
+      <Flex gap="lg">
+        <Flex direction="column">
+          <Title order={4}>Enhancement Costs</Title>
           <Table striped highlightOnHover withBorder withColumnBorders>
             <thead>
               <tr>
                 <th>Item</th>
                 <th>Count</th>
-                <th>Median Ask</th>
-                <th>Median Bid</th>
+                <th>Ask</th>
+                <th>Bid</th>
+                <th>Vendor</th>
                 <th>Value</th>
               </tr>
             </thead>
-            <tbody>{marketRows}</tbody>
+            <tbody>
+              {marketRows}
+              <tr>
+                <th colSpan={5}>Total</th>
+                <td>{getFriendlyIntString(costPerEnhance)}</td>
+              </tr>
+            </tbody>
           </Table>
-        </Grid.Col>
-        <Grid.Col span="auto">
-          <div>time: {actionTimer.toFixed(2)}</div>
-          <div>avg xp: {averageEnhanceXp.toFixed(2)}</div>
-          <div>cost per: {costPerEnhance.toFixed(0)}</div>
-          <div>coin / xp: {(costPerEnhance / averageEnhanceXp).toFixed(2)}</div>
-          <div>
-            xp / hr:{" "}
-            {getFriendlyIntString((averageEnhanceXp * 3600) / actionTimer)}
-          </div>
-          <div>protection cost: {protectionCost.toFixed(0)}</div>
-          <div>cost: {getFriendlyIntString(cost)}</div>
-          <div>prot level: {protLevel}</div>
-          <div>prots Used: {protUsedCol[target].toFixed(2)}</div>
-          <div>actions: {actionsCol[target].toFixed(2)}</div>
-          <div>
-            hours: {((actionsCol[target] * actionTimer) / 3600).toFixed(2)}
-          </div>
-        </Grid.Col>
-      </Grid>
+        </Flex>
+        <Flex direction="column">
+          <Title order={4}>Protection Items</Title>
+          <Table striped highlightOnHover withBorder withColumnBorders>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Ask</th>
+                <th>Bid</th>
+                <th>Vendor</th>
+              </tr>
+            </thead>
+            <tbody>{protectionItemRows}</tbody>
+          </Table>
+        </Flex>
+      </Flex>
+
+      <Flex direction="column">
+        <Table highlightOnHover withBorder>
+          <tbody>
+            <tr>
+              <th>time/action</th>
+              <td>{Duration.fromObject({ seconds: actionTimer }).toHuman()}</td>
+            </tr>
+            <tr>
+              <th>avg xp/action</th>
+              <td>{averageEnhanceXp.toFixed(2)}</td>
+            </tr>
+            <tr>
+              <th>coin/xp</th>
+              <td>
+                {getFriendlyIntString(costPerEnhance / averageEnhanceXp, 2)}
+              </td>
+            </tr>
+            <tr>
+              <th>xp/hr</th>
+              <td>
+                {getFriendlyIntString((averageEnhanceXp * 3600) / actionTimer)}
+              </td>
+            </tr>
+            <tr>
+              <th>Prot Level</th>
+              <td>{protLevel}</td>
+            </tr>
+            <tr>
+              <th>Prots Used</th>
+              <td>{protUsedCol[target].toFixed(2)}</td>
+            </tr>
+            <tr>
+              <th>Average Actions</th>
+              <td>{getFriendlyIntString(actionsCol[target], 2)}</td>
+            </tr>
+            <tr>
+              <th>Average Time</th>
+              <td>
+                {Duration.fromObject({
+                  seconds: actionsCol[target] * actionTimer,
+                })
+                  .shiftTo("hours", "minutes", "seconds")
+                  .toHuman()}
+              </td>
+            </tr>
+            <tr>
+              <th>Average Cost</th>
+              <td>{getFriendlyIntString(cost)}</td>
+            </tr>
+            <tr>
+              <th>Average Total xp</th>
+              <td>
+                {getFriendlyIntString(actionsCol[target] * averageEnhanceXp)}
+              </td>
+            </tr>
+          </tbody>
+        </Table>
+      </Flex>
       <Table>
         <thead>
           <tr>
@@ -289,14 +432,7 @@ export default function EnhancingCalc({
             <th>Actions</th>
             <th>Protections</th>
             <th>Critical</th>
-            <th>
-              <Tooltip label="Factors in blessed tea if applicable" withArrow>
-                <Flex gap="xs" justify="center">
-                  Expected Cost
-                  <IconInfoCircle />
-                </Flex>
-              </Tooltip>
-            </th>
+            <th>Average Cost</th>
           </tr>
         </thead>
         <tbody>
@@ -304,14 +440,14 @@ export default function EnhancingCalc({
             return (
               <tr key={"enhancing/results/" + x}>
                 <td>{x}</td>
-                <td>{pCol[x].toFixed(2)}</td>
-                <td>{sCol[x].toFixed(2)}</td>
-                <td>{zCol[x].toFixed(2)}</td>
-                <td>{tCol[x].toFixed(2)}</td>
+                <td>{pCol[x].toFixed(5)}</td>
+                <td>{sCol[x].toFixed(10)}</td>
+                <td>{zCol[x].toFixed(10)}</td>
+                <td>{tCol[x]}</td>
                 <td>{getFriendlyIntString(costCol[x])}</td>
                 <td>{getFriendlyIntString(inflectionCol[x])}</td>
-                <td>{actionsCol[x].toFixed(2)}</td>
-                <td>{protUsedCol[x].toFixed(2)}</td>
+                <td>{getFriendlyIntString(actionsCol[x], 2)}</td>
+                <td>{getFriendlyIntString(protUsedCol[x], 2)}</td>
                 <td>{criticalCol[x].toFixed(4)}</td>
                 <td>{getFriendlyIntString(expectedCostCol[x])}</td>
               </tr>
