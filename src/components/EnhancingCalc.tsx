@@ -266,6 +266,7 @@ export default function EnhancingCalc({
           <td>{x.count}</td>
           <td colSpan={3} />
           <td>1</td>
+          <td>{getFriendlyIntString(actionsCol[target] * x.count)}</td>
         </tr>
       );
     }
@@ -302,6 +303,7 @@ export default function EnhancingCalc({
             }
           />
         </td>
+        <td>{getFriendlyIntString(actionsCol[target] * x.count)}</td>
       </tr>
     );
   });
@@ -334,6 +336,7 @@ export default function EnhancingCalc({
                 <th>Bid</th>
                 <th>Vendor</th>
                 <th>Value</th>
+                <th>Average Used</th>
               </tr>
             </thead>
             <tbody>
@@ -341,6 +344,7 @@ export default function EnhancingCalc({
               <tr>
                 <th colSpan={5}>Total</th>
                 <td>{getFriendlyIntString(costPerEnhance)}</td>
+                <td></td>
               </tr>
             </tbody>
           </Table>
