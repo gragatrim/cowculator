@@ -10,7 +10,7 @@ import { MarketResponse, MarketValue } from "../models/Market";
 
 export interface ApiData {
   gameVersion: string;
-  marketTime: Date;
+  marketTime?: Date;
   levelExperienceTable: number[];
   itemDetails: { [key: string]: ItemDetail & MarketValue };
   actionDetails: { [key: string]: ActionDetailMap };
@@ -40,13 +40,14 @@ const getApiData = async (): Promise<ApiData> => {
   Object.entries(clientData.itemDetailMap).forEach(([key, value]) => {
     itemDetails[key] = {
       ...value,
-      ...marketData.market[value.name],
+      ...(marketData?.market?.[value.name] ??
+        { ask: -1, bid: -1, vendor: value.sellPrice }),
     };
   });
 
   const result = {
     gameVersion: clientData.gameVersion,
-    marketTime: new Date(marketData.time * 1000),
+    marketTime: marketData.time ? new Date(marketData.time * 1000) : undefined,
     itemDetails,
     actionDetails: clientData.actionDetailMap,
     combatMonsterDetails: clientData.combatMonsterDetailMap,

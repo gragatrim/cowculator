@@ -51,7 +51,10 @@ export default function App() {
               Game Version: <Code>{data.gameVersion}</Code>
             </div>
             <div>
-              Market Date: <Code>{data.marketTime.toLocaleString()}</Code>
+              Market Date:{" "}
+              <Code>
+                {data.marketTime ? data.marketTime.toLocaleString() : "No data"}
+              </Code>
             </div>
           </Flex>
         </Footer>
