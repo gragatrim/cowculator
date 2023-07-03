@@ -7,6 +7,7 @@ import {
   ItemDetail,
 } from "../models/Client";
 import { MarketResponse, MarketValue } from "../models/Market";
+import rawData from "../assets/init_client_info.json";
 
 export interface ApiData {
   gameVersion: string;
@@ -25,15 +26,7 @@ export interface ApiData {
 const getApiData = async (): Promise<ApiData> => {
   const marketData = await getMarketData();
 
-  const clientData = await axios
-    .get<ClientResponse>(
-      "https://raw.githubusercontent.com/tristo7/MilkyWayIdleData/main/init_client_info.json",
-    )
-    .then((res) => res.data);
-
-  if (!clientData && !marketData) {
-    throw new Error("Did not get the data we need.");
-  }
+  const clientData = rawData as ClientResponse;
 
   const itemDetails: { [key: string]: ItemDetail & MarketValue } = {};
 
@@ -47,7 +40,7 @@ const getApiData = async (): Promise<ApiData> => {
 
   const result = {
     gameVersion: clientData.gameVersion,
-    marketTime: marketData.time ? new Date(marketData.time * 1000) : undefined,
+    marketTime: marketData?.time ? new Date(marketData.time * 1000) : undefined,
     itemDetails,
     actionDetails: clientData.actionDetailMap,
     combatMonsterDetails: clientData.combatMonsterDetailMap,
