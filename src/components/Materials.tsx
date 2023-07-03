@@ -3,29 +3,41 @@ import { ApiData } from "../services/ApiService";
 import { Cost } from "../models/Client";
 import { useMemo, useState } from "react";
 import Icon from "./Icon";
+import { getFriendlyIntString } from "../helpers/Formatting";
+import { getActionSeconds } from "../helpers/CommonFunctions";
 
 interface Props {
   actionCategory: string;
   data: ApiData;
-  level: number | "";
+  effectiveLevel: number;
   xp: number | "";
   targetLevel: number | "";
   toolBonus: number | "";
   fromRaw: boolean;
+  teas: string[];
 }
 
 export default function Materials({
   actionCategory,
   data,
-  level,
+  effectiveLevel,
   xp,
   targetLevel,
   toolBonus,
   fromRaw = false,
+  teas,
 }: Props) {
   const [priceOverrides, setPriceOverrides] = useState<{
     [key: string]: number | "";
   }>({});
+
+  const wisdomTeaBonus = teas.some((x) => x === "/items/wisdom_tea") ? 1.12 : 1;
+  const efficiencyTeaBonus = teas.some((x) => x === "/items/efficiency_tea")
+    ? 0.1
+    : 0;
+
+  const hasArtisan = teas.some((x) => x === "/items/artisan_tea");
+  const gourmetBonus = teas.some((x) => x === "/items/gourmet_tea") ? 1.12 : 1;
 
   const actions = useMemo(
     () =>
@@ -81,27 +93,18 @@ export default function Materials({
       .map((y) => y.count * getApproxValue(y.itemHrid))
       .reduce((acc, val) => acc + val);
 
-    return price;
+    return +price.toFixed(2);
   };
 
   const rows = actions.map((x) => {
-    const seconds = x.baseTimeCost / 1000000000 / (1 + (toolBonus || 0) / 100);
-    const exp = x.experienceGain.value;
+    let seconds = getActionSeconds(x.baseTimeCost, toolBonus);
+    let exp = x.experienceGain.value * wisdomTeaBonus;
     const levelReq = x.levelRequirement.level;
-    const efficiency = Math.max(1, (100 + (level || 1) - levelReq) / 100);
+    const efficiency =
+      Math.max(1, (100 + (effectiveLevel || 1) - levelReq) / 100) +
+      efficiencyTeaBonus;
 
     let actionsToTarget = 0;
-
-    if (xp && targetLevel) {
-      actionsToTarget = (data.levelExperienceTable[targetLevel + 1] - xp) / exp;
-    }
-
-    const expPerHour = ((exp / seconds) * 3600 * efficiency).toLocaleString(
-      undefined,
-      {
-        maximumFractionDigits: 0,
-      }
-    );
 
     let inputs: Cost[] = x.inputItems?.slice() || [];
     let upgradeHrid = x.upgradeItemHrid;
@@ -121,20 +124,42 @@ export default function Materials({
         actions.push(newAction);
       }
 
+      exp = exp + newAction.experienceGain.value * wisdomTeaBonus;
+      seconds = seconds + getActionSeconds(newAction.baseTimeCost, toolBonus);
+
       upgradeHrid = newAction.upgradeItemHrid;
     }
 
+    if (xp && targetLevel) {
+      actionsToTarget = (data.levelExperienceTable[targetLevel + 1] - xp) / exp;
+    }
+
+    const expPerHour = (exp / seconds) * 3600 * efficiency;
+
+    if (hasArtisan) {
+      inputs = inputs.map((y) => {
+        return {
+          ...y,
+          count: y.count * 0.9,
+        };
+      });
+    }
+
+    const outputItems =
+      x.outputItems?.map((y) => {
+        return {
+          ...y,
+          count: y.count * gourmetBonus,
+        };
+      }) ?? null;
+
     const inputCost = getAveragePrice(inputs);
-    const outputCost = getAveragePrice(x.outputItems);
+    const outputCost = getAveragePrice(outputItems);
 
     const profit = outputCost - inputCost;
-    const profitPerHour = (
-      (profit / seconds) *
-      3600 *
-      efficiency
-    ).toLocaleString(undefined, { maximumFractionDigits: 0 });
+    const profitPerHour = (profit / seconds) * 3600 * efficiency;
 
-    const outputItem = x.outputItems?.[0];
+    const outputItem = outputItems?.[0];
 
     return (
       <tr key={x.hrid}>
@@ -150,19 +175,15 @@ export default function Materials({
             {outputItem && <Icon hrid={outputItem.itemHrid} />} {x.name}
           </Flex>
         </td>
-        <td>{exp}</td>
+        <td>{getFriendlyIntString(exp, 2)}</td>
         <td>{seconds.toFixed(2)}s</td>
         <td>{efficiency.toFixed(2)}</td>
-        <td>{expPerHour}</td>
-        <td>
-          {actionsToTarget.toLocaleString(undefined, {
-            maximumFractionDigits: 0,
-          })}
-        </td>
-        <td>{inputCost}</td>
-        <td>{outputCost}</td>
-        <td>{profit}</td>
-        <td>{profitPerHour}</td>
+        <td>{getFriendlyIntString(expPerHour)}</td>
+        <td>{getFriendlyIntString(actionsToTarget)}</td>
+        <td>{getFriendlyIntString(inputCost, 2)}</td>
+        <td>{getFriendlyIntString(outputCost, 2)}</td>
+        <td>{getFriendlyIntString(profit, 2)}</td>
+        <td>{getFriendlyIntString(profitPerHour)}</td>
       </tr>
     );
   });

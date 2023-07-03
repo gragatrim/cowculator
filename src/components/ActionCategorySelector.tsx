@@ -1,4 +1,12 @@
-import { Flex, Group, NativeSelect, NumberInput, Switch } from "@mantine/core";
+import {
+  Flex,
+  Group,
+  MultiSelect,
+  NativeSelect,
+  NumberInput,
+  Switch,
+  Text,
+} from "@mantine/core";
 import Materials from "./Materials";
 import { ApiData } from "../services/ApiService";
 import { useMemo, useState } from "react";
@@ -14,6 +22,25 @@ export default function ActionCategorySelector({ skill, data }: Props) {
   const [xp, setXp] = useState<number | "">("");
   const [targetLevel, setTargetLevel] = useState<number | "">("");
   const [toolBonus, setToolBonus] = useState<number | "">(0);
+  const [teas, setTeas] = useState([""]);
+
+  const getTeaError = () => {
+    if (teas.length === 0) return null;
+
+    if (teas.filter((x) => x.includes(`${skill}_tea`)).length > 1) {
+      return `Cannot use both ${skill} teas.`;
+    }
+  };
+
+  const availableTeas = Object.values(data.itemDetails)
+    .filter(
+      (x) =>
+        x.consumableDetail.usableInActionTypeMap?.[`/action_types/${skill}`]
+    )
+    .map((x) => ({
+      label: x.name,
+      value: x.hrid,
+    }));
 
   const options = useMemo(
     () =>
@@ -32,6 +59,14 @@ export default function ActionCategorySelector({ skill, data }: Props) {
   );
 
   const [category, setCategory] = useState(options[0].value);
+
+  const teaLevelBonus = teas.some((x) => x === `/items/super_${skill}_tea`)
+    ? 6
+    : teas.some((x) => x === `/items/${skill}_tea`)
+    ? 3
+    : 0;
+
+  const effectiveLevel = (level || 1) + teaLevelBonus;
 
   return (
     <Flex
@@ -62,6 +97,13 @@ export default function ActionCategorySelector({ skill, data }: Props) {
           label="Level"
           withAsterisk
           hideControls
+          rightSection={
+            teaLevelBonus && (
+              <>
+                <Text c="#EE9A1D">+{teaLevelBonus}</Text>
+              </>
+            )
+          }
         />
         <NumberInput
           value={toolBonus}
@@ -71,6 +113,15 @@ export default function ActionCategorySelector({ skill, data }: Props) {
           hideControls
           precision={2}
           formatter={(value) => `${value}%`}
+        />
+        <MultiSelect
+          data={availableTeas}
+          value={teas}
+          onChange={setTeas}
+          label="Teas"
+          maxSelectedValues={3}
+          error={getTeaError()}
+          clearable
         />
         <NumberInput
           value={xp}
@@ -91,11 +142,12 @@ export default function ActionCategorySelector({ skill, data }: Props) {
         <Materials
           actionCategory={category}
           data={data}
-          level={level}
+          effectiveLevel={effectiveLevel}
           xp={xp}
           targetLevel={targetLevel}
           toolBonus={toolBonus}
           fromRaw={fromRaw}
+          teas={teas}
         />
       )}
     </Flex>

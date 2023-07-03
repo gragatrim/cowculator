@@ -11,6 +11,7 @@ import { ActionType, DropTable } from "../models/Client";
 import { useMemo, useState } from "react";
 import Icon from "./Icon";
 import { getFriendlyIntString } from "../helpers/Formatting";
+import { getActionSeconds } from "../helpers/CommonFunctions";
 
 interface Props {
   type: ActionType;
@@ -175,10 +176,7 @@ export default function Gathering({ type, data }: Props) {
   });
 
   const rows = actions.map((x) => {
-    const seconds = Math.max(
-      3,
-      x.baseTimeCost / 1000000000 / (1 + (toolBonus || 0) / 100)
-    );
+    const seconds = getActionSeconds(x.baseTimeCost, toolBonus);
     const exp = x.experienceGain.value * wisdomTeaBonus;
     const levelReq = x.levelRequirement.level;
     const efficiency =
