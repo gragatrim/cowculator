@@ -37,8 +37,8 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
   if (!action.outputItems) return <Fragment />;
 
   const hasArtisan = teas.some((x) => x === "/items/artisan_tea");
-  const wisdomTeaBonus = teas.some((x) => x === "/items/wisdom_tea") ? 0.12 : 0;
-  const gourmetBonus = teas.some((x) => x === "/items/gourmet_tea") ? 0.12 : 0;
+  const wisdomTeaBonus = teas.some((x) => x === "/items/wisdom_tea") ? 1.12 : 1;
+  const gourmetBonus = teas.some((x) => x === "/items/gourmet_tea") ? 1.12 : 1;
 
   const outputItem = {
     ...data.itemDetails[action.outputItems[0].itemHrid],
@@ -71,7 +71,7 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
   }
 
   const totalExp = actions.reduce(
-    (acc, val) => acc + val.experienceGain.value * (1 + wisdomTeaBonus),
+    (acc, val) => acc + val.experienceGain.value * wisdomTeaBonus,
     0
   );
 
@@ -133,7 +133,7 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
     0
   );
 
-  const outputCount = outputItem.count * (1 + gourmetBonus);
+  const outputCount = outputItem.count * gourmetBonus;
   const outputCost = getApproxValue(outputItem.hrid);
 
   const rows = rowData.map((x, i) => {

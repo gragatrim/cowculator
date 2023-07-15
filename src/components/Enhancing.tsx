@@ -11,14 +11,14 @@ import {
 import { ApiData } from "../services/ApiService";
 import EnhancingCalc from "./EnhancingCalc";
 import { ActionType } from "../models/Client";
+import { Skill, getTeaBonuses } from "../helpers/CommonFunctions";
 
 interface Props {
   data: ApiData;
 }
 
-const skillName = "enhancing";
-
 export default function Enhancing({ data }: Props) {
+  const skill = Skill.Enhancing;
   const [item, setItem] = useState<string | null>(null);
   const [level, setLevel] = useState<number | "">(1);
   const [toolBonus, setToolBonus] = useState<number | "">(0);
@@ -39,19 +39,7 @@ export default function Enhancing({ data }: Props) {
     [data.itemDetails]
   );
 
-  const teaLevelBonus = teas.some((x) => x === `/items/super_${skillName}_tea`)
-    ? 6
-    : teas.some((x) => x === `/items/${skillName}_tea`)
-    ? 3
-    : 0;
-
-  const getTeaError = () => {
-    if (teas.length === 0) return null;
-
-    if (teas.filter((x) => x.includes(`${skillName}_tea`)).length > 1) {
-      return `Cannot use both ${skillName} teas.`;
-    }
-  };
+  const { teaError, levelTeaBonus } = getTeaBonuses(teas, skill);
 
   const items = useMemo(
     () =>
@@ -90,9 +78,9 @@ export default function Enhancing({ data }: Props) {
           withAsterisk
           hideControls
           rightSection={
-            teaLevelBonus && (
+            levelTeaBonus && (
               <>
-                <Text c="#EE9A1D">+{teaLevelBonus}</Text>
+                <Text c="#EE9A1D">+{levelTeaBonus}</Text>
               </>
             )
           }
@@ -117,7 +105,7 @@ export default function Enhancing({ data }: Props) {
             onChange={setTeas}
             label="Teas"
             maxSelectedValues={3}
-            error={getTeaError()}
+            error={teaError}
           />
         </Tooltip>
       </Group>

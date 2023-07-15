@@ -13,6 +13,7 @@ import { ActionType } from "./models/Client";
 import Market from "./components/Market";
 import ActionCategorySelector from "./components/ActionCategorySelector";
 import { Suspense, lazy } from "react";
+import { Skill } from "./helpers/CommonFunctions";
 
 const ItemLookup = lazy(() => import("./components/ItemLookup"));
 const Enhancing = lazy(() => import("./components/Enhancing"));
@@ -101,35 +102,50 @@ export default function App() {
             </Tabs.Panel>
 
             <Tabs.Panel value="milking" pt="xs">
-              <Gathering type={ActionType.Milking} data={data} />
+              <Gathering
+                skill={Skill.Milking}
+                type={ActionType.Milking}
+                data={data}
+              />
             </Tabs.Panel>
 
             <Tabs.Panel value="foraging" pt="xs">
-              <Gathering type={ActionType.Foraging} data={data} />
+              <Gathering
+                skill={Skill.Foraging}
+                type={ActionType.Foraging}
+                data={data}
+              />
             </Tabs.Panel>
 
             <Tabs.Panel value="woodcutting" pt="xs">
-              <Gathering type={ActionType.Woodcutting} data={data} />
+              <Gathering
+                skill={Skill.Woodcutting}
+                type={ActionType.Woodcutting}
+                data={data}
+              />
             </Tabs.Panel>
 
             <Tabs.Panel value="cheesesmithing" pt="xs">
-              <ActionCategorySelector skill="cheesesmithing" data={data} />
+              <ActionCategorySelector
+                skill={Skill.Cheesesmithing}
+                data={data}
+              />
             </Tabs.Panel>
 
             <Tabs.Panel value="crafting" pt="xs">
-              <ActionCategorySelector skill="crafting" data={data} />
+              <ActionCategorySelector skill={Skill.Crafting} data={data} />
             </Tabs.Panel>
 
             <Tabs.Panel value="tailoring" pt="xs">
-              <ActionCategorySelector skill="tailoring" data={data} />
+              <ActionCategorySelector skill={Skill.Tailoring} data={data} />
             </Tabs.Panel>
 
             <Tabs.Panel value="cooking" pt="xs">
-              <ActionCategorySelector skill="cooking" data={data} />
+              <ActionCategorySelector skill={Skill.Cooking} data={data} />
             </Tabs.Panel>
 
             <Tabs.Panel value="brewing" pt="xs">
-              <ActionCategorySelector skill="brewing" data={data} />
+              <ActionCategorySelector skill={Skill.Brewing} data={data} />
             </Tabs.Panel>
 
             <Tabs.Panel value="enhancing" pt="xs">

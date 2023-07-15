@@ -11,14 +11,19 @@ import { ActionType, DropTable } from "../models/Client";
 import { useMemo, useState } from "react";
 import Icon from "./Icon";
 import { getFriendlyIntString } from "../helpers/Formatting";
-import { getActionSeconds } from "../helpers/CommonFunctions";
+import {
+  Skill,
+  getActionSeconds,
+  getTeaBonuses,
+} from "../helpers/CommonFunctions";
 
 interface Props {
   type: ActionType;
   data: ApiData;
+  skill: Skill;
 }
 
-export default function Gathering({ type, data }: Props) {
+export default function Gathering({ type, data, skill }: Props) {
   const [level, setLevel] = useState<number>(1);
   const [toolBonus, setToolBonus] = useState<number | "">(0);
   const [teas, setTeas] = useState([""]);
@@ -26,31 +31,15 @@ export default function Gathering({ type, data }: Props) {
     [key: string]: number | "";
   }>({});
 
-  const skillName = type.split("/").pop() ?? "milking";
+  const {
+    levelTeaBonus,
+    wisdomTeaBonus,
+    gatheringTeaBonus,
+    efficiencyTeaBonus,
+    teaError,
+  } = getTeaBonuses(teas, skill);
 
-  const wisdomTeaBonus = teas.some((x) => x === "/items/wisdom_tea") ? 1.12 : 1;
-  const efficiencyTeaBonus = teas.some((x) => x === "/items/efficiency_tea")
-    ? 0.1
-    : 0;
-  const gatheringTeaBonus = teas.some((x) => x === "/items/gathering_tea")
-    ? 1.15
-    : 1;
-
-  const teaLevelBonus = teas.some((x) => x === `/items/super_${skillName}_tea`)
-    ? 6
-    : teas.some((x) => x === `/items/${skillName}_tea`)
-    ? 3
-    : 0;
-
-  const effectiveLevel = level + teaLevelBonus;
-
-  const getTeaError = () => {
-    if (teas.length === 0) return null;
-
-    if (teas.filter((x) => x.includes(`${skillName}_tea`)).length > 1) {
-      return `Cannot use both ${skillName} teas.`;
-    }
-  };
+  const effectiveLevel = level + levelTeaBonus;
 
   const availableTeas = Object.values(data.itemDetails)
     .filter((x) => x.consumableDetail.usableInActionTypeMap?.[type])
@@ -257,9 +246,9 @@ export default function Gathering({ type, data }: Props) {
           withAsterisk
           hideControls
           rightSection={
-            teaLevelBonus && (
+            levelTeaBonus && (
               <>
-                <Text c="#EE9A1D">+{teaLevelBonus}</Text>
+                <Text c="#EE9A1D">+{levelTeaBonus}</Text>
               </>
             )
           }
@@ -279,7 +268,7 @@ export default function Gathering({ type, data }: Props) {
           onChange={setTeas}
           label="Teas"
           maxSelectedValues={3}
-          error={getTeaError()}
+          error={teaError}
           clearable
         />
       </Flex>

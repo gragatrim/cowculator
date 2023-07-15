@@ -4,7 +4,11 @@ import { Cost } from "../models/Client";
 import { useMemo, useState } from "react";
 import Icon from "./Icon";
 import { getFriendlyIntString } from "../helpers/Formatting";
-import { getActionSeconds } from "../helpers/CommonFunctions";
+import {
+  Skill,
+  getActionSeconds,
+  getTeaBonuses,
+} from "../helpers/CommonFunctions";
 
 interface Props {
   actionCategory: string;
@@ -15,6 +19,7 @@ interface Props {
   toolBonus: number | "";
   fromRaw: boolean;
   teas: string[];
+  skill: Skill;
 }
 
 export default function Materials({
@@ -26,18 +31,18 @@ export default function Materials({
   toolBonus,
   fromRaw = false,
   teas,
+  skill,
 }: Props) {
   const [priceOverrides, setPriceOverrides] = useState<{
     [key: string]: number | "";
   }>({});
 
-  const wisdomTeaBonus = teas.some((x) => x === "/items/wisdom_tea") ? 1.12 : 1;
-  const efficiencyTeaBonus = teas.some((x) => x === "/items/efficiency_tea")
-    ? 0.1
-    : 0;
-
-  const hasArtisan = teas.some((x) => x === "/items/artisan_tea");
-  const gourmetBonus = teas.some((x) => x === "/items/gourmet_tea") ? 1.12 : 1;
+  const {
+    wisdomTeaBonus,
+    efficiencyTeaBonus,
+    artisanTeaBonus,
+    gourmetTeaBonus,
+  } = getTeaBonuses(teas, skill);
 
   const actions = useMemo(
     () =>
@@ -136,20 +141,18 @@ export default function Materials({
 
     const expPerHour = (exp / seconds) * 3600 * efficiency;
 
-    if (hasArtisan) {
-      inputs = inputs.map((y) => {
-        return {
-          ...y,
-          count: y.count * 0.9,
-        };
-      });
-    }
+    inputs = inputs.map((y) => {
+      return {
+        ...y,
+        count: y.count * artisanTeaBonus,
+      };
+    });
 
     const outputItems =
       x.outputItems?.map((y) => {
         return {
           ...y,
-          count: y.count * gourmetBonus,
+          count: y.count * gourmetTeaBonus,
         };
       }) ?? null;
 

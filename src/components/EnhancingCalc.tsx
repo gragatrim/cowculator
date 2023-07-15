@@ -42,7 +42,7 @@ export default function EnhancingCalc({
     : teas.some((x) => x === "/items/enhancing_tea")
     ? 3
     : 0;
-  const wisdomTeaBonus = teas.some((x) => x === "/items/wisdom_tea") ? 0.12 : 0;
+  const wisdomTeaBonus = teas.some((x) => x === "/items/wisdom_tea") ? 1.12 : 1;
 
   const level = baseLevel + teaLevelBonus;
 
@@ -220,7 +220,7 @@ export default function EnhancingCalc({
         sample.map((i) => Z(i) * T(i)).reduce((a, b) => a + b)) *
       1.5 *
       (item.itemLevel + 10) *
-      (1 + wisdomTeaBonus)
+      wisdomTeaBonus
     );
   };
 

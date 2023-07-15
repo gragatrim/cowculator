@@ -10,9 +10,10 @@ import {
 import Materials from "./Materials";
 import { ApiData } from "../services/ApiService";
 import { useMemo, useState } from "react";
+import { Skill, getTeaBonuses } from "../helpers/CommonFunctions";
 
 interface Props {
-  skill: "cheesesmithing" | "crafting" | "tailoring" | "cooking" | "brewing";
+  skill: Skill;
   data: ApiData;
 }
 
@@ -24,13 +25,7 @@ export default function ActionCategorySelector({ skill, data }: Props) {
   const [toolBonus, setToolBonus] = useState<number | "">(0);
   const [teas, setTeas] = useState([""]);
 
-  const getTeaError = () => {
-    if (teas.length === 0) return null;
-
-    if (teas.filter((x) => x.includes(`${skill}_tea`)).length > 1) {
-      return `Cannot use both ${skill} teas.`;
-    }
-  };
+  const { teaError, levelTeaBonus } = getTeaBonuses(teas, skill);
 
   const availableTeas = Object.values(data.itemDetails)
     .filter(
@@ -60,13 +55,7 @@ export default function ActionCategorySelector({ skill, data }: Props) {
 
   const [category, setCategory] = useState(options[0].value);
 
-  const teaLevelBonus = teas.some((x) => x === `/items/super_${skill}_tea`)
-    ? 6
-    : teas.some((x) => x === `/items/${skill}_tea`)
-    ? 3
-    : 0;
-
-  const effectiveLevel = (level || 1) + teaLevelBonus;
+  const effectiveLevel = (level || 1) + levelTeaBonus;
 
   return (
     <Flex
@@ -98,9 +87,9 @@ export default function ActionCategorySelector({ skill, data }: Props) {
           withAsterisk
           hideControls
           rightSection={
-            teaLevelBonus && (
+            levelTeaBonus && (
               <>
-                <Text c="#EE9A1D">+{teaLevelBonus}</Text>
+                <Text c="#EE9A1D">+{levelTeaBonus}</Text>
               </>
             )
           }
@@ -120,7 +109,7 @@ export default function ActionCategorySelector({ skill, data }: Props) {
           onChange={setTeas}
           label="Teas"
           maxSelectedValues={3}
-          error={getTeaError()}
+          error={teaError}
           clearable
         />
         <NumberInput
@@ -148,6 +137,7 @@ export default function ActionCategorySelector({ skill, data }: Props) {
           toolBonus={toolBonus}
           fromRaw={fromRaw}
           teas={teas}
+          skill={skill}
         />
       )}
     </Flex>
