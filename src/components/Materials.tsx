@@ -136,7 +136,7 @@ export default function Materials({
     }
 
     if (xp && targetLevel) {
-      actionsToTarget = (data.levelExperienceTable[targetLevel + 1] - xp) / exp;
+      actionsToTarget = (data.levelExperienceTable[targetLevel] - xp) / exp;
     }
 
     const expPerHour = (exp / seconds) * 3600 * efficiency;
