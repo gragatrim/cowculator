@@ -24,7 +24,7 @@ export default function ActionCategorySelector({ skill, data }: Props) {
   const [targetLevel, setTargetLevel] = useState<number | "">("");
   const [toolBonus, setToolBonus] = useState<number | "">(0);
   const [teas, setTeas] = useState([""]);
-
+  const [gearEfficiency, setGearEfficiency] = useState<number | "">(0)
   const { teaError, levelTeaBonus } = getTeaBonuses(teas, skill);
 
   const availableTeas = Object.values(data.itemDetails)
@@ -103,6 +103,15 @@ export default function ActionCategorySelector({ skill, data }: Props) {
           precision={2}
           formatter={(value) => `${value}%`}
         />
+        <NumberInput
+          value={gearEfficiency}
+          onChange={setGearEfficiency}
+          label="Gear Efficiency"
+          withAsterisk
+          hideControls
+          precision={2}
+          formatter={(value) => `${value}%`}
+        />
         <MultiSelect
           data={availableTeas}
           value={teas}
@@ -135,6 +144,7 @@ export default function ActionCategorySelector({ skill, data }: Props) {
           xp={xp}
           targetLevel={targetLevel}
           toolBonus={toolBonus}
+          gearEfficiency={gearEfficiency}
           fromRaw={fromRaw}
           teas={teas}
           skill={skill}

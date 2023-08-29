@@ -22,6 +22,7 @@ export default function Enhancing({ data }: Props) {
   const [item, setItem] = useState<string | null>(null);
   const [level, setLevel] = useState<number | "">(1);
   const [toolBonus, setToolBonus] = useState<number | "">(0);
+  const [gearSpeed, setGearSpeed] = useState<number | "">(0);
   const [teas, setTeas] = useState<string[]>([]);
   const [target, setTarget] = useState<number>(1);
 
@@ -94,6 +95,15 @@ export default function Enhancing({ data }: Props) {
           precision={2}
           formatter={(value) => `${value}%`}
         />
+        <NumberInput
+          value={gearSpeed}
+          onChange={setGearSpeed}
+          label="Gear Speed"
+          withAsterisk
+          hideControls
+          precision={2}
+          formatter={(value) => `${value}%`}
+        />
         <Tooltip
           label="Tea costs are not yet included in cost calculations."
           withArrow
@@ -134,6 +144,7 @@ export default function Enhancing({ data }: Props) {
           item={data.itemDetails[item]}
           baseLevel={level || 1}
           toolPercent={toolBonus || 0}
+          gearSpeed={gearSpeed || 0}
           target={target}
           teas={teas}
         />
