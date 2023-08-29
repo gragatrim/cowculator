@@ -12,6 +12,7 @@ interface Props {
   item: ItemDetail & MarketValue;
   baseLevel: number;
   toolPercent: number;
+  gearSpeed: number;
   target: number;
   teas: string[];
 }
@@ -24,6 +25,7 @@ export default function EnhancingCalc({
   item,
   baseLevel,
   toolPercent,
+  gearSpeed,
   target,
   teas,
 }: Props) {
@@ -50,7 +52,7 @@ export default function EnhancingCalc({
 
   const actionTimer =
     (action.baseTimeCost / 1000000000) *
-    Math.min(1, 100 / (100 + level - item.itemLevel));
+    Math.min(1, 100 / (100 + level - item.itemLevel + (gearSpeed || 0)));
 
   const getApproxValue = (hrid: string): number => {
     if (hrid === "/items/coin") return 1;

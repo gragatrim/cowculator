@@ -26,6 +26,7 @@ interface Props {
 export default function Gathering({ type, data, skill }: Props) {
   const [level, setLevel] = useState<number>(1);
   const [toolBonus, setToolBonus] = useState<number | "">(0);
+  const [gearEfficiency, setGearEfficiency] = useState<number | "">(0)
   const [teas, setTeas] = useState([""]);
   const [priceOverrides, setPriceOverrides] = useState<{
     [key: string]: number | "";
@@ -168,9 +169,7 @@ export default function Gathering({ type, data, skill }: Props) {
     const seconds = getActionSeconds(x.baseTimeCost, toolBonus);
     const exp = x.experienceGain.value * wisdomTeaBonus;
     const levelReq = x.levelRequirement.level;
-    const efficiency =
-      Math.max(1, (100 + (effectiveLevel || 1) - levelReq) / 100) +
-      efficiencyTeaBonus;
+    const efficiency = Math.max(1, (100 + (effectiveLevel || 1) - levelReq) / 100) + efficiencyTeaBonus + ((gearEfficiency || 0) / 100);
 
     const lootPerAction = getItemsPerAction(x.dropTable).concat(
       getRareItemsPerAction(x.rareDropTable)
@@ -257,6 +256,15 @@ export default function Gathering({ type, data, skill }: Props) {
           value={toolBonus}
           onChange={setToolBonus}
           label="Tool Bonus"
+          withAsterisk
+          hideControls
+          precision={2}
+          formatter={(value) => `${value}%`}
+        />
+        <NumberInput
+          value={gearEfficiency}
+          onChange={setGearEfficiency}
+          label="Gear Efficiency"
           withAsterisk
           hideControls
           precision={2}

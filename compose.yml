@@ -1,0 +1,13 @@
+version: "3"
+
+
+services:
+  calc:
+    build: .
+    container_name: calc
+    command: npm run dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./:/app
+      - /app/node_modules
