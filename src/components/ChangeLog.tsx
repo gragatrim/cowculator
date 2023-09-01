@@ -12,6 +12,7 @@ export default function ChangeLog() {
           <li>Reduced size of inputs for Level/Bonuses/Efficiency/XP/Target Level (they don't need to hold 30 digits!)</li>
           <li>Removed "Combat" from the Cowculator, with bosses being released it's been incorrect and there are no plans to update it</li>
           <li>Added validation for a bunch of fields, but probably not them all</li>
+          <li>GitHub links in the footer, go request features or report bugs or get into the code with us!</li>
         </ul>
       </div>
 

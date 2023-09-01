@@ -20,7 +20,6 @@ const ItemLookup = lazy(() => import("./components/ItemLookup"));
 const Enhancing = lazy(() => import("./components/Enhancing"));
 const Gathering = lazy(() => import("./components/Gathering"));
 const Calculator = lazy(() => import("./components/Calculator"));
-const Character = lazy(() => import("./components/Character"));
 
 export default function App() {
   const { data, isLoading } = useQuery({
@@ -42,6 +41,13 @@ export default function App() {
                 {data.marketTime ? data.marketTime.toLocaleString() : "No data"}
               </Code>
             </div>
+            <div>
+              <a href="https://github.com/MWISim/cowculator" target="_blank" className="footer-link">Contribute</a>
+            </div>
+            <div>
+              <a href="https://github.com/MWISim/cowculator/issues" target="_blank" className="footer-link">Report Bug / Suggest Feature</a>
+            </div>
+
           </Flex>
         </Footer>
       }
@@ -56,7 +62,6 @@ export default function App() {
         <Suspense fallback={<Loader />}>
           <Tabs variant="outline" defaultValue="production">
             <Tabs.List>
-              {/* <Tabs.Tab value="character">Character</Tabs.Tab> */}
               <Tabs.Tab value="production">Production</Tabs.Tab>
               <Tabs.Tab value="itemLookup">Item Lookup</Tabs.Tab>
               <Tabs.Tab value="milking">Milking</Tabs.Tab>
@@ -73,7 +78,6 @@ export default function App() {
             </Tabs.List>
 
             {/* Panels that the header cycles through */}
-            <Tabs.Panel value="character" pt="xs"><Character data={data} /></Tabs.Panel>
             <Tabs.Panel value="production" pt="xs"><Calculator data={data} /></Tabs.Panel>
             <Tabs.Panel value="itemLookup" pt="xs"><ItemLookup data={data} /></Tabs.Panel>
             <Tabs.Panel value="milking" pt="xs"><Gathering skill={Skill.Milking} type={ActionType.Milking} data={data} /></Tabs.Panel>
