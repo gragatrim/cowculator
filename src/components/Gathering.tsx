@@ -242,6 +242,9 @@ export default function Gathering({ type, data, skill }: Props) {
           value={level}
           onChange={(val) => setLevel(val || 1)}
           label="Level"
+          className="sm"
+          min={1}
+          max={200}
           withAsterisk
           hideControls
           rightSection={
@@ -256,6 +259,7 @@ export default function Gathering({ type, data, skill }: Props) {
           value={toolBonus}
           onChange={setToolBonus}
           label="Tool Bonus"
+          className="md"
           withAsterisk
           hideControls
           precision={2}
@@ -265,6 +269,7 @@ export default function Gathering({ type, data, skill }: Props) {
           value={gearEfficiency}
           onChange={setGearEfficiency}
           label="Gear Efficiency"
+          className="md"
           withAsterisk
           hideControls
           precision={2}

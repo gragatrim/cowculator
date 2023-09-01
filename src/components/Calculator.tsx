@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Flex, Select, Switch } from "@mantine/core";
+import { Flex, Group, Select, Switch } from "@mantine/core";
 import { ApiData } from "../services/ApiService";
 import ActionCalc from "./ActionCalc";
 import { ActionFunction } from "../models/Client";
@@ -27,23 +27,25 @@ export default function Calculator({ data }: Props) {
       direction="column"
       wrap="wrap"
     >
-      <Select
-        searchable
-        size="lg"
-        value={action}
-        onChange={setAction}
-        data={actions}
-        label="Select an item"
-        placeholder="Pick one"
-      />
-      <Switch
-        onLabel="CRAFT"
-        offLabel="BUY"
-        label="Upgrade Items"
-        size="xl"
-        checked={fromRaw}
-        onChange={(event) => setFromRaw(event.currentTarget.checked)}
-      />
+      <Group>
+        <Select
+          searchable
+          size="lg"
+          value={action}
+          onChange={setAction}
+          data={actions}
+          label="Select an item"
+          placeholder="Pick one"
+        />
+        <Switch
+          onLabel="CRAFT"
+          offLabel="BUY"
+          label="Upgrade Items"
+          size="xl"
+          checked={fromRaw}
+          onChange={(event) => setFromRaw(event.currentTarget.checked)}
+        />
+      </Group>
       {action && (
         <ActionCalc
           fromRaw={fromRaw}

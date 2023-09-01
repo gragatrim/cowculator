@@ -15,9 +15,10 @@ import { Skill, getTeaBonuses } from "../helpers/CommonFunctions";
 interface Props {
   skill: Skill;
   data: ApiData;
+  showUpgradeToggle?: boolean;
 }
 
-export default function ActionCategorySelector({ skill, data }: Props) {
+export default function ActionCategorySelector({ skill, data, showUpgradeToggle = true }: Props) {
   const [fromRaw, setFromRaw] = useState(false);
   const [level, setLevel] = useState<number | "">(1);
   const [xp, setXp] = useState<number | "">("");
@@ -73,17 +74,22 @@ export default function ActionCategorySelector({ skill, data }: Props) {
           value={category}
           onChange={(event) => setCategory(event.currentTarget.value)}
         />
-        <Switch
-          onLabel="CRAFT UPGRADE ITEM"
-          offLabel="BUY UPGRADE ITEM"
-          size="xl"
-          checked={fromRaw}
-          onChange={(event) => setFromRaw(event.currentTarget.checked)}
-        />
+        {showUpgradeToggle && (
+          <Switch
+            onLabel="CRAFT UPGRADE ITEM"
+            offLabel="BUY UPGRADE ITEM"
+            size="xl"
+            checked={fromRaw}
+            onChange={(event) => setFromRaw(event.currentTarget.checked)}
+          />
+        )}
         <NumberInput
           value={level}
           onChange={setLevel}
           label="Level"
+          className="sm"
+          min={1}
+          max={200}
           withAsterisk
           hideControls
           rightSection={
@@ -98,18 +104,22 @@ export default function ActionCategorySelector({ skill, data }: Props) {
           value={toolBonus}
           onChange={setToolBonus}
           label="Tool Bonus"
+          className="md"
           withAsterisk
           hideControls
           precision={2}
+          min={0}
           formatter={(value) => `${value}%`}
         />
         <NumberInput
           value={gearEfficiency}
           onChange={setGearEfficiency}
           label="Gear Efficiency"
+          className="md"
           withAsterisk
           hideControls
           precision={2}
+          min={0}
           formatter={(value) => `${value}%`}
         />
         <MultiSelect
@@ -125,6 +135,8 @@ export default function ActionCategorySelector({ skill, data }: Props) {
           value={xp}
           onChange={setXp}
           label="Experience"
+          className="md"
+          min={0}
           withAsterisk
           hideControls
         />
@@ -132,6 +144,9 @@ export default function ActionCategorySelector({ skill, data }: Props) {
           value={targetLevel}
           onChange={setTargetLevel}
           label="Target Level"
+          className="md"
+          min={1}
+          max={200}
           withAsterisk
           hideControls
         />
