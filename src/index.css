@@ -67,3 +67,11 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* Mantine overrides */
+.mantine-InputWrapper-root.sm {
+  width: 4rem;
+}
+.mantine-InputWrapper-root.md {
+  width: 7rem;
+}

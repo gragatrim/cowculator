@@ -75,7 +75,10 @@ export default function Enhancing({ data }: Props) {
         <NumberInput
           value={level}
           onChange={setLevel}
-          label="Enhancing Level"
+          label="Level"
+          className="sm"
+          min={0}
+          max={200}
           withAsterisk
           hideControls
           rightSection={
@@ -90,6 +93,7 @@ export default function Enhancing({ data }: Props) {
           value={toolBonus}
           onChange={setToolBonus}
           label="Tool Bonus"
+          className="md"
           withAsterisk
           hideControls
           precision={2}
@@ -99,6 +103,7 @@ export default function Enhancing({ data }: Props) {
           value={gearSpeed}
           onChange={setGearSpeed}
           label="Gear Speed"
+          className="md"
           withAsterisk
           hideControls
           precision={2}
@@ -133,6 +138,7 @@ export default function Enhancing({ data }: Props) {
           value={target}
           onChange={(value) => setTarget(value || 1)}
           label="Target Level"
+          className="md"
           withAsterisk
           min={1}
           max={20}
