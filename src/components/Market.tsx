@@ -28,7 +28,7 @@ export default function Market({data}: Props) {
   const [item, setItem] = useState<string | null>(null);
   const [historicalData, setHistoricalData] = useState<any>([]);
   const [loading, setLoading] = useState<boolean | null>(null);
-  const [latest, setLatest] = useState<any>(null);
+  // const [latest, setLatest] = useState<any>(null);
 
   useEffect(() => {
     if (!item) { return; }
@@ -38,12 +38,12 @@ export default function Market({data}: Props) {
       setLoading(false);
     })
   }, [item]);
-  useEffect(() => {
-    if (historicalData)
-      setLatest(historicalData.at(-1));
-    else
-      setLatest(null);
-  }, [historicalData]);
+  // useEffect(() => {
+  //   if (historicalData)
+  //     setLatest(historicalData.at(-1));
+  //   else
+  //     setLatest(null);
+  // }, [historicalData]);
 
   return (
     <>
