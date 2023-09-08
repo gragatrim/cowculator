@@ -84,3 +84,8 @@ button:focus-visible {
 footer div {
   margin-right: 2rem;
 }
+
+/* Recharts overrides */
+.recharts-default-tooltip {
+  background: #222 !important;
+}

@@ -5,6 +5,13 @@ export default function ChangeLog() {
       <hr/>
 
       <div>
+        <strong>September 7th, 2023: Market Hotness</strong>
+        <ul>
+          <li>Added historical market data, big ups to <a href="https://github.com/holychikenz/MWIApi" target="_blank">holychikenz</a> for the data :)</li>
+        </ul>
+      </div>
+
+      <div>
         <strong>August 31st, 2023: Change Log + UI Improvements</strong>
         <ul>
           <li>Added the Change Log, to track updates</li>

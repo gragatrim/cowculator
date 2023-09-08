@@ -1,77 +1,77 @@
-import { useQuery } from "@tanstack/react-query";
-import { getMarketData } from "../services/ApiService";
-import { Code, Flex, Loader, Space, Table, TextInput } from "@mantine/core";
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
+import { Flex, Loader } from "@mantine/core";
+import { Legend, LineChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import ItemDropdown from "./ItemDropdown";
+import {ApiData} from "../services/ApiService";
+import {getHistoricalData} from "../services/MarketApi";
 
-export default function Market() {
-  const [search, setSearch] = useState("");
-  const { data, isLoading } = useQuery({
-    queryKey: ["marketData"],
-    queryFn: () => getMarketData(false),
-    refetchInterval: 30 * 60 * 1000,
-  });
+interface Props {
+  data: ApiData;
+}
 
-  const items = useMemo(
-    () =>
-      data &&
-      Object.entries(data.market)
-        .filter(
-          ([key]) => !search || key.toLowerCase().includes(search.toLowerCase())
-        )
-        .sort(([, a], [, b]) => {
-          if (a.bid > b.bid) return -1;
-          if (a.bid < b.bid) return 1;
-          return 0;
-        })
-        .map(([key, val]) => {
-          return (
-            <tr key={key}>
-              <td>{key}</td>
-              <td>{val.ask}</td>
-              <td>{val.bid}</td>
-            </tr>
-          );
-        }),
-    [data, search]
-  );
+const shapeData = (data: any) => {
+  return data[0].values.map((d: any) => {
+    return {
+      date: d[0].substring(5, d[0].length - 3),
+      ask: d[1] != -1 ? d[1] : null,
+      bid: d[2] != -1 ? d[2] : null,
+      spread: d[3] != -1 ? d[3] : null,
+    }
+  }).reverse();
+}
 
-  if (isLoading || !data) return <Loader />;
+const BID_COLOR = "#bbffbb";
+const ASK_COLOR = "#ffbbbb";
+const SPREAD_COLOR = "#bbbbff";
+
+export default function Market({data}: Props) {
+  const [item, setItem] = useState<string | null>(null);
+  const [historicalData, setHistoricalData] = useState<any>([]);
+  const [loading, setLoading] = useState<boolean | null>(null);
+  const [latest, setLatest] = useState<any>(null);
+
+  useEffect(() => {
+    if (!item) { return; }
+    setLoading(true);
+    getHistoricalData(item).then((d: any) => {
+      setHistoricalData(shapeData(d));
+      setLoading(false);
+    })
+  }, [item]);
+  useEffect(() => {
+    if (historicalData)
+      setLatest(historicalData.at(-1));
+    else
+      setLatest(null);
+  }, [historicalData]);
 
   return (
     <>
-      <div>
-        Market Date: <Code>{new Date(data.time * 1000).toLocaleString()}</Code>
-      </div>
       <Flex>
-        <TextInput
-          placeholder="Holy Brush"
-          label="Search"
-          value={search}
-          onChange={(event) => setSearch(event.currentTarget.value)}
-        />
+        <ItemDropdown data={data} onChange={setItem}/>
       </Flex>
-      <Space h="md" />
+      <div style={{width: '100%', height: 450, marginTop: '2rem'}}>
+        {loading === true && (<Loader/>)}
+        {loading === false && (<>
+          {latest && (
+            <div style={{marginBottom: '2rem'}}>
+              Latest: <span style={{color: ASK_COLOR}}>{latest.ask.toLocaleString()} Ask</span> / <span style={{color: BID_COLOR}}>{latest.bid.toLocaleString()} Bid</span> / <span style={{color: SPREAD_COLOR}}>{latest.spread.toLocaleString()} Spread</span>
+            </div>
+          )}
+          <ResponsiveContainer>
+            <LineChart data={historicalData}>
+              <XAxis dataKey="date" tickCount={0}/>
+              <YAxis domain={[0, 'dataMax']}/>
+              <Tooltip formatter={(value: any) => value && value.toLocaleString()}/>
+              <Legend/>
 
-      <Flex
-        gap="sm"
-        justify="flex-start"
-        align="flex-start"
-        wrap="wrap"
-        direction="row"
-      >
-        <Flex direction="column">
-          <Table striped highlightOnHover withBorder withColumnBorders>
-            <thead>
-              <tr>
-                <th>Item</th>
-                <th>Ask</th>
-                <th>Bid</th>
-              </tr>
-            </thead>
-            <tbody>{items}</tbody>
-          </Table>
-        </Flex>
-      </Flex>
+              <Line type="monotone" dataKey="ask" stroke={ASK_COLOR} dot={false} activeDot={{r: 4}}/>
+              <Line type="monotone" dataKey="bid" stroke={BID_COLOR} dot={false} activeDot={{r: 4}}/>
+              <Line type="monotone" dataKey="spread" stroke={SPREAD_COLOR} dot={false} activeDot={{r: 4}}/>
+            </LineChart>
+          </ResponsiveContainer>
+        </>)}
+      </div>
     </>
-  );
+  )
 }

@@ -10,7 +10,6 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import getApiData from "./services/ApiService";
 import { ActionType } from "./models/Client";
-import Market from "./components/Market";
 import ActionCategorySelector from "./components/ActionCategorySelector";
 import { Suspense, lazy } from "react";
 import { Skill } from "./helpers/CommonFunctions";
@@ -20,6 +19,7 @@ const ItemLookup = lazy(() => import("./components/ItemLookup"));
 const Enhancing = lazy(() => import("./components/Enhancing"));
 const Gathering = lazy(() => import("./components/Gathering"));
 const Calculator = lazy(() => import("./components/Calculator"));
+const Market = lazy(() => import("./components/Market"));
 
 export default function App() {
   const { data, isLoading } = useQuery({
@@ -89,7 +89,7 @@ export default function App() {
             <Tabs.Panel value="cooking" pt="xs"><ActionCategorySelector skill={Skill.Cooking} data={data} showUpgradeToggle={false} /></Tabs.Panel>
             <Tabs.Panel value="brewing" pt="xs"><ActionCategorySelector skill={Skill.Brewing} data={data} /></Tabs.Panel>
             <Tabs.Panel value="enhancing" pt="xs"><Enhancing data={data} /></Tabs.Panel>
-            <Tabs.Panel value="market" pt="xs"><Market /></Tabs.Panel>
+            <Tabs.Panel value="market" pt="xs"><Market data={data}/></Tabs.Panel>
             <Tabs.Panel value="changelog" pt="xs"><ChangeLog/></Tabs.Panel>
           </Tabs>
         </Suspense>
