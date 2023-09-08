@@ -53,11 +53,11 @@ export default function Market({data}: Props) {
       <div style={{width: '100%', height: 450, marginTop: '2rem'}}>
         {loading === true && (<Loader/>)}
         {loading === false && (<>
-          {latest && (
-            <div style={{marginBottom: '2rem'}}>
-              Latest: <span style={{color: ASK_COLOR}}>{latest.ask.toLocaleString()} Ask</span> / <span style={{color: BID_COLOR}}>{latest.bid.toLocaleString()} Bid</span> / <span style={{color: SPREAD_COLOR}}>{latest.spread.toLocaleString()} Spread</span>
-            </div>
-          )}
+          {/*{latest && (*/}
+          {/*  <div style={{marginBottom: '2rem'}}>*/}
+          {/*    Latest: <span style={{color: ASK_COLOR}}>{latest.ask.toLocaleString()} Ask</span> / <span style={{color: BID_COLOR}}>{latest.bid.toLocaleString()} Bid</span> / <span style={{color: SPREAD_COLOR}}>{latest.spread.toLocaleString()} Spread</span>*/}
+          {/*  </div>*/}
+          {/*)}*/}
           <ResponsiveContainer>
             <LineChart data={historicalData}>
               <XAxis dataKey="date" tickCount={0}/>
