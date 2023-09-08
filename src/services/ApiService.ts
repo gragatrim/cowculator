@@ -58,8 +58,7 @@ const getApiData = async (): Promise<ApiData> => {
 };
 
 export const getMarketData = (useMedian = true) => {
-  return axios.get<MarketResponse>(
-    `https://raw.githubusercontent.com/holychikenz/MWIApi/main/${
+  return axios.get<MarketResponse>(`https://raw.githubusercontent.com/holychikenz/MWIApi/main/${
       useMedian ? "medianmarket" : "milkyapi"
     }.json`,
   ).then((x) => x.data);
