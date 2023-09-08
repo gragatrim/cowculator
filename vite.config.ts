@@ -17,6 +17,11 @@ function customHotReload() {
 export default defineConfig({
   plugins: [react(), customHotReload()],
   base: "/cowculator/",
+  esbuild: {
+    supported: {
+      'top-level-await': true
+    }
+  },
   // This is for people working on Windows with WSL, you have to enable polling which is CPU intensive
   server: {
     watch: {
