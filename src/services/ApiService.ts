@@ -7,7 +7,7 @@ import {
   ItemDetail,
 } from "../models/Client";
 import { MarketResponse, MarketValue } from "../models/Market";
-import rawData from "../assets/init_client_info.json";
+import rawData from "../assets/init_client_data.json";
 
 export interface ApiData {
   gameVersion: string;
@@ -58,8 +58,7 @@ const getApiData = async (): Promise<ApiData> => {
 };
 
 export const getMarketData = (useMedian = true) => {
-  return axios.get<MarketResponse>(`https://raw.githubusercontent.com/holychikenz/MWIApi/main/${
-      useMedian ? "medianmarket" : "milkyapi"
+  return axios.get<MarketResponse>(`https://raw.githubusercontent.com/holychikenz/MWIApi/main/${useMedian ? "medianmarket" : "milkyapi"
     }.json`,
   ).then((x) => x.data);
 };
