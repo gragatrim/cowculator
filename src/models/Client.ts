@@ -35,7 +35,7 @@ export interface AbilityDetailMap {
   description: string;
   manaCost: number;
   cooldownDuration: number;
-  hasSpecialEffects: boolean;
+  isSpecialAbility: boolean;
   abilityEffects: AbilityEffect[];
   defaultCombatTriggers: DefaultCombatTrigger[];
   sortIndex: number;
