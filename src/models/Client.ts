@@ -389,7 +389,6 @@ export interface CombatTriggerDependencyDetailMap {
   "/combat_trigger_dependencies/all_allies": CombatTrigger;
   "/combat_trigger_dependencies/all_enemies": CombatTrigger;
   "/combat_trigger_dependencies/self": CombatTrigger;
-  "/combat_trigger_dependencies/targeted_ally": CombatTrigger;
   "/combat_trigger_dependencies/targeted_enemy": CombatTrigger;
 }
 
