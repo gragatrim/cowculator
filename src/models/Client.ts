@@ -162,6 +162,7 @@ export interface DropTable {
   dropRate: number;
   minCount: number;
   maxCount: number;
+  minElitetier: number;
 }
 
 export interface ExperienceGain {
