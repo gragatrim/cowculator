@@ -271,8 +271,8 @@ export interface CombatMonsterDetailMap {
   name: string;
   combatDetails: CombatDetails;
   abilities: Ability[];
-  dropTable: DropTable[];
-  rareDropTable: DropTable[];
+  dropTable: DropTable[] | null;
+  rareDropTable: DropTable[] | null;
 }
 
 export interface Ability {
