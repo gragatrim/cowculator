@@ -153,7 +153,7 @@ export interface ActionDetailMap {
   upgradeItemHrid: string;
   inputItems: Cost[] | null;
   outputItems: Cost[] | null;
-  monsterSpawnInfo: MonsterSpawnInfo;
+  combatZoneInfo: CombatZoneInfo | null;
   sortIndex: number;
 }
 
@@ -206,7 +206,15 @@ export interface LevelRequirement {
   level: number;
 }
 
-export interface MonsterSpawnInfo {
+export interface CombatZoneInfo {
+  fightInfo: FightInfo;
+}
+
+export interface FightInfo {
+  randomSpawnInfo: RandomSpawnInfo;
+}
+
+export interface RandomSpawnInfo {
   maxSpawnCount: number;
   maxTotalStrength: number;
   spawns: Spawn[] | null;
