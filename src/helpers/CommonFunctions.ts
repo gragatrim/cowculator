@@ -52,6 +52,7 @@ export const getTeaBonuses = (
 };
 
 export enum Skill {
+  Alchemy = "alchemy",
   Brewing = "brewing",
   Cheesesmithing = "cheesesmithing",
   Cooking = "cooking",
