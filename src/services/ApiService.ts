@@ -3,6 +3,12 @@ import {
   ActionCategoryDetailMap,
   ActionDetailMap,
   ClientResponse,
+  ItemBook,
+  ItemResource,
+  ItemKey,
+  ItemFoodDrink,
+  ItemCurrency,
+  ItemLoot,
   ItemDetail,
 } from "../models/Client";
 import { MarketResponse, MarketValue } from "../models/Market";
