@@ -3,7 +3,6 @@ import {
   ActionCategoryDetailMap,
   ActionDetailMap,
   ClientResponse,
-  CombatMonsterDetailMap,
   ItemDetail,
 } from "../models/Client";
 import { MarketResponse, MarketValue } from "../models/Market";
@@ -15,7 +14,6 @@ export interface ApiData {
   levelExperienceTable: number[];
   itemDetails: { [key: string]: ItemDetail & MarketValue };
   actionDetails: { [key: string]: ActionDetailMap };
-  combatMonsterDetails: { [key: string]: CombatMonsterDetailMap };
   actionTypeDetails: { [key: string]: ActionCategoryDetailMap };
   actionCategoryDetails: { [key: string]: ActionCategoryDetailMap };
   enhancementLevelSuccessRateTable: number[];
