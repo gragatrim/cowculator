@@ -13,7 +13,6 @@ export interface ClientResponse {
   equipmentTypeDetailMap: { [key: string]: ActionCategoryDetailMap };
   combatStyleDetailMap: CombatStyleDetailMap;
   damageTypeDetailMap: DamageTypeDetailMap;
-  combatMonsterDetailMap: { [key: string]: CombatMonsterDetailMap };
   combatTriggerDependencyDetailMap: CombatTriggerDependencyDetailMap;
   combatTriggerConditionDetailMap: { [key: string]: CombatTrigger };
   combatTriggerComparatorDetailMap: CombatTriggerComparatorDetailMap;
@@ -272,15 +271,6 @@ export interface ChatIconDetailMap {
   isSpecial: boolean;
   cowbellCost: number;
   sortIndex: number;
-}
-
-export interface CombatMonsterDetailMap {
-  hrid: string;
-  name: string;
-  combatDetails: CombatDetails;
-  abilities: Ability[];
-  dropTable: DropTable[] | null;
-  rareDropTable: DropTable[] | null;
 }
 
 export interface Ability {
