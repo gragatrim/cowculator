@@ -13,7 +13,6 @@ export interface ClientResponse {
   equipmentTypeDetailMap: { [key: string]: ActionCategoryDetailMap };
   combatStyleDetailMap: CombatStyleDetailMap;
   damageTypeDetailMap: DamageTypeDetailMap;
-  combatMonsterDetailMap: { [key: string]: CombatMonsterDetailMap };
   combatTriggerDependencyDetailMap: CombatTriggerDependencyDetailMap;
   combatTriggerConditionDetailMap: { [key: string]: CombatTrigger };
   combatTriggerComparatorDetailMap: CombatTriggerComparatorDetailMap;
