@@ -12,7 +12,7 @@ export interface ApiData {
   gameVersion: string;
   marketTime?: Date;
   levelExperienceTable: number[];
-  itemDetails: { [key: string]: ItemDetail & MarketValue };
+  itemDetails: { [key: string]: (ItemBook | ItemResource | ItemKey | ItemFoodDrink | ItemCurrency | ItemLoot | ItemDetail) & MarketValue };
   actionDetails: { [key: string]: ActionDetailMap };
   actionTypeDetails: { [key: string]: ActionCategoryDetailMap };
   actionCategoryDetails: { [key: string]: ActionCategoryDetailMap };
@@ -26,7 +26,7 @@ const getApiData = async (): Promise<ApiData> => {
 
   const clientData = rawData as ClientResponse;
 
-  const itemDetails: { [key: string]: ItemDetail & MarketValue } = {};
+  const itemDetails: { [key: string]: (ItemBook | ItemResource | ItemKey | ItemFoodDrink | ItemCurrency | ItemLoot | ItemDetail) & MarketValue } = {};
 
   Object.entries(clientData.itemDetailMap).forEach(([key, value]) => {
     itemDetails[key] = {
