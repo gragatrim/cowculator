@@ -33,12 +33,6 @@ export default function ItemLookup({ data }: Props) {
   const rareDrops = Object.values(data.actionDetails).filter((x) =>
     x.rareDropTable?.some((y) => y.itemHrid === choice.hrid)
   );
-  const monsterDrops = Object.values(data.combatMonsterDetails).filter((x) =>
-    x.dropTable?.some((y) => y.itemHrid === choice.hrid)
-  );
-  const monsterRareDrops = Object.values(data.combatMonsterDetails).filter(
-    (x) => x.rareDropTable?.some((y) => y.itemHrid === choice.hrid)
-  );
   const enhancingCosts = Object.values(data.itemDetails).filter((x) =>
     x.enhancementCosts?.some((y) => y.itemHrid === choice.hrid)
   );
@@ -181,84 +175,6 @@ export default function ItemLookup({ data }: Props) {
               </thead>
               <tbody>
                 {rareDrops.map((x) => {
-                  const i = x.rareDropTable?.find((y) => y.itemHrid === item);
-                  return (
-                    <tr key={"item-search-input" + x.hrid}>
-                      <Flex
-                        justify="flex-start"
-                        align="center"
-                        direction="row"
-                        wrap="wrap"
-                        gap="xs"
-                      >
-                        <Icon hrid={x.hrid} /> {x.name}
-                      </Flex>
-                      <td>
-                        {i?.dropRate.toLocaleString(undefined, {
-                          style: "percent",
-                          minimumFractionDigits: 2,
-                        })}
-                      </td>
-                      <td>{getCountString(i?.minCount, i?.maxCount)}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </Table>
-          </Grid.Col>
-        )}
-        {monsterDrops.length > 0 && (
-          <Grid.Col span={6}>
-            <Title align="center">Monster Drops</Title>
-            <Table striped highlightOnHover withBorder withColumnBorders>
-              <thead>
-                <tr>
-                  <th>Source</th>
-                  <th>Rate</th>
-                  <th>Count</th>
-                </tr>
-              </thead>
-              <tbody>
-                {monsterDrops.map((x) => {
-                  const i = x.dropTable?.find((y) => y.itemHrid === item);
-                  return (
-                    <tr key={"item-search-input" + x.hrid}>
-                      <Flex
-                        justify="flex-start"
-                        align="center"
-                        direction="row"
-                        wrap="wrap"
-                        gap="xs"
-                      >
-                        <Icon hrid={x.hrid} /> {x.name}
-                      </Flex>
-                      <td>
-                        {i?.dropRate.toLocaleString(undefined, {
-                          style: "percent",
-                          minimumFractionDigits: 2,
-                        })}
-                      </td>
-                      <td>{getCountString(i?.minCount, i?.maxCount)}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </Table>
-          </Grid.Col>
-        )}
-        {monsterRareDrops.length > 0 && (
-          <Grid.Col span={6}>
-            <Title align="center">Monster Rare Drops</Title>
-            <Table striped highlightOnHover withBorder withColumnBorders>
-              <thead>
-                <tr>
-                  <th>Source</th>
-                  <th>Rate</th>
-                  <th>Count</th>
-                </tr>
-              </thead>
-              <tbody>
-                {monsterRareDrops.map((x) => {
                   const i = x.rareDropTable?.find((y) => y.itemHrid === item);
                   return (
                     <tr key={"item-search-input" + x.hrid}>
