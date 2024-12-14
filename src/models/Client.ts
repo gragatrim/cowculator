@@ -7,7 +7,7 @@ export interface ClientResponse {
   skillDetailMap: { [key: string]: ActionCategoryDetailMap };
   abilityDetailMap: { [key: string]: AbilityDetailMap };
   abilitySlotsLevelRequirementList: number[];
-  itemDetailMap: { [key: string]: ItemDetail };
+  itemDetailMap: { [key: string]: ItemBook | ItemResource | ItemKey | ItemFoodDrink | ItemCurrency | ItemLoot | ItemDetail };
   itemCategoryDetailMap: ItemCategoryDetailMap;
   itemLocationDetailMap: { [key: string]: ItemLocationDetailMap };
   equipmentTypeDetailMap: { [key: string]: ActionCategoryDetailMap };
