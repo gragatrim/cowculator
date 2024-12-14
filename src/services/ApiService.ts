@@ -41,7 +41,6 @@ const getApiData = async (): Promise<ApiData> => {
     marketTime: marketData?.time ? new Date(marketData.time * 1000) : undefined,
     itemDetails,
     actionDetails: clientData.actionDetailMap,
-    combatMonsterDetails: clientData.combatMonsterDetailMap,
     actionTypeDetails: clientData.actionTypeDetailMap,
     actionCategoryDetails: clientData.actionCategoryDetailMap,
     levelExperienceTable: clientData.levelExperienceTable,
