@@ -1249,7 +1249,7 @@ export interface ItemBook {
   description: string;
   categoryHrid: CategoryHrid;
   sellPrice: number;
-  isTradable: bool;
+  isTradable: boolean;
   itemLevel: number;
   abilityBookDetail: AbilityBookDetail;
   sortIndex: number;
