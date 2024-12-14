@@ -1215,22 +1215,6 @@ export interface ItemDetail {
   abilityBookDetail: AbilityBookDetail;
   sortIndex: number;
 }
-export interface ItemDetail {
-  hrid: string;
-  name: string;
-  description: string;
-  categoryHrid: CategoryHrid;
-  sellPrice: number;
-  isTradable: boolean;
-  isOpenable: boolean;
-  itemLevel: number;
-  enhancementCosts: Cost[] | null;
-  protectionItemHrids: string[] | null;
-  equipmentDetail: EquipmentDetail;
-  consumableDetail: ConsumableDetail;
-  abilityBookDetail: AbilityBookDetail;
-  sortIndex: number;
-}
 
 export interface AbilityBookDetail {
   abilityHrid: string;
