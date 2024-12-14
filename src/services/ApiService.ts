@@ -3,12 +3,7 @@ import {
   ActionCategoryDetailMap,
   ActionDetailMap,
   ClientResponse,
-  ItemBook,
-  ItemResource,
-  ItemKey,
-  ItemFoodDrink,
-  ItemCurrency,
-  ItemLoot,
+  CombatMonsterDetailMap,
   ItemDetail,
 } from "../models/Client";
 import { MarketResponse, MarketValue } from "../models/Market";
@@ -18,8 +13,9 @@ export interface ApiData {
   gameVersion: string;
   marketTime?: Date;
   levelExperienceTable: number[];
-  itemDetails: { [key: string]: (ItemBook | ItemResource | ItemKey | ItemFoodDrink | ItemCurrency | ItemLoot | ItemDetail) & MarketValue };
+  itemDetails: { [key: string]: ItemDetail & MarketValue };
   actionDetails: { [key: string]: ActionDetailMap };
+  combatMonsterDetails: { [key: string]: CombatMonsterDetailMap };
   actionTypeDetails: { [key: string]: ActionCategoryDetailMap };
   actionCategoryDetails: { [key: string]: ActionCategoryDetailMap };
   enhancementLevelSuccessRateTable: number[];
@@ -32,7 +28,7 @@ const getApiData = async (): Promise<ApiData> => {
 
   const clientData = rawData as ClientResponse;
 
-  const itemDetails: { [key: string]: (ItemBook | ItemResource | ItemKey | ItemFoodDrink | ItemCurrency | ItemLoot | ItemDetail) & MarketValue } = {};
+  const itemDetails: { [key: string]: ItemDetail & MarketValue } = {};
 
   Object.entries(clientData.itemDetailMap).forEach(([key, value]) => {
     itemDetails[key] = {
@@ -47,6 +43,7 @@ const getApiData = async (): Promise<ApiData> => {
     marketTime: marketData?.time ? new Date(marketData.time * 1000) : undefined,
     itemDetails,
     actionDetails: clientData.actionDetailMap,
+    combatMonsterDetails: clientData.combatMonsterDetailMap,
     actionTypeDetails: clientData.actionTypeDetailMap,
     actionCategoryDetails: clientData.actionCategoryDetailMap,
     levelExperienceTable: clientData.levelExperienceTable,
