@@ -506,6 +506,8 @@ export interface ItemDetailMap {
   "/items/acrobatic_hood": ItemDetail;
   "/items/acrobats_ribbon": ItemDetail;
   "/items/advanced_task_badge": ItemDetail;
+  "/items/alchemists_bottoms": ItemDetail;
+  "/items/alchemists_top": ItemDetail;
   "/items/alchemy_essence": ItemDetail;
   "/items/alchemy_tea": ItemDetail;
   "/items/amber": ItemDetail;
@@ -589,6 +591,9 @@ export interface ItemDetailMap {
   "/items/blueberry": ItemDetail;
   "/items/blueberry_cake": ItemDetail;
   "/items/blueberry_donut": ItemDetail;
+  "/items/branch_of_insight": ItemDetail;
+  "/items/brewers_bottoms": ItemDetail;
+  "/items/brewers_top": ItemDetail;
   "/items/brewing_essence": ItemDetail;
   "/items/brewing_tea": ItemDetail;
   "/items/brown_key_fragment": ItemDetail;
@@ -616,6 +621,7 @@ export interface ItemDetailMap {
   "/items/burble_sword": ItemDetail;
   "/items/burble_tea_leaf": ItemDetail;
   "/items/burning_key_fragment": ItemDetail;
+  "/items/butter_of_proficiency": ItemDetail;
   "/items/catalyst_of_coinification": ItemDetail;
   "/items/catalyst_of_decomposition": ItemDetail;
   "/items/catalyst_of_transmutation": ItemDetail;
@@ -628,6 +634,16 @@ export interface ItemDetailMap {
   "/items/cedar_nature_staff": ItemDetail;
   "/items/cedar_shield": ItemDetail;
   "/items/cedar_water_staff": ItemDetail;
+  "/items/celestial_alembic": ItemDetail;
+  "/items/celestial_brush": ItemDetail;
+  "/items/celestial_chisel": ItemDetail;
+  "/items/celestial_enhancer": ItemDetail;
+  "/items/celestial_hammer": ItemDetail;
+  "/items/celestial_hatchet": ItemDetail;
+  "/items/celestial_needle": ItemDetail;
+  "/items/celestial_pot": ItemDetail;
+  "/items/celestial_shears": ItemDetail;
+  "/items/celestial_spatula": ItemDetail;
   "/items/centaur_boots": ItemDetail;
   "/items/centaur_hoof": ItemDetail;
   "/items/channeling_coffee": ItemDetail;
@@ -654,8 +670,12 @@ export interface ItemDetailMap {
   "/items/cheese_spatula": ItemDetail;
   "/items/cheese_spear": ItemDetail;
   "/items/cheese_sword": ItemDetail;
+  "/items/cheesemakers_bottoms": ItemDetail;
+  "/items/cheesemakers_top": ItemDetail;
   "/items/cheesesmithing_essence": ItemDetail;
   "/items/cheesesmithing_tea": ItemDetail;
+  "/items/chefs_bottoms": ItemDetail;
+  "/items/chefs_top": ItemDetail;
   "/items/chimerical_chest": ItemDetail;
   "/items/chimerical_chest_key": ItemDetail;
   "/items/chimerical_entry_key": ItemDetail;
@@ -682,6 +702,8 @@ export interface ItemDetailMap {
   "/items/cotton_robe_top": ItemDetail;
   "/items/cowbell": ItemDetail;
   "/items/crab_pincer": ItemDetail;
+  "/items/crafters_bottoms": ItemDetail;
+  "/items/crafters_top": ItemDetail;
   "/items/crafting_essence": ItemDetail;
   "/items/crafting_tea": ItemDetail;
   "/items/crimson_alembic": ItemDetail;
@@ -720,6 +742,8 @@ export interface ItemDetailMap {
   "/items/cupcake": ItemDetail;
   "/items/cursed_ball": ItemDetail;
   "/items/cursed_bow": ItemDetail;
+  "/items/dairyhands_bottoms": ItemDetail;
+  "/items/dairyhands_top": ItemDetail;
   "/items/dark_key_fragment": ItemDetail;
   "/items/defense_coffee": ItemDetail;
   "/items/demonic_core": ItemDetail;
@@ -750,6 +774,8 @@ export interface ItemDetailMap {
   "/items/enchanted_essence": ItemDetail;
   "/items/enchanted_gloves": ItemDetail;
   "/items/enchanted_token": ItemDetail;
+  "/items/enhancers_bottoms": ItemDetail;
+  "/items/enhancers_top": ItemDetail;
   "/items/enhancing_essence": ItemDetail;
   "/items/enhancing_tea": ItemDetail;
   "/items/entangle": ItemDetail;
@@ -771,6 +797,8 @@ export interface ItemDetailMap {
   "/items/flaming_robe_top": ItemDetail;
   "/items/flax": ItemDetail;
   "/items/fluffy_red_hat": ItemDetail;
+  "/items/foragers_bottoms": ItemDetail;
+  "/items/foragers_top": ItemDetail;
   "/items/foraging_essence": ItemDetail;
   "/items/foraging_tea": ItemDetail;
   "/items/frenzy": ItemDetail;
@@ -876,6 +904,8 @@ export interface ItemDetailMap {
   "/items/log": ItemDetail;
   "/items/lucky_coffee": ItemDetail;
   "/items/lumber": ItemDetail;
+  "/items/lumberjacks_bottoms": ItemDetail;
+  "/items/lumberjacks_top": ItemDetail;
   "/items/luna_robe_bottoms": ItemDetail;
   "/items/luna_robe_top": ItemDetail;
   "/items/luna_wing": ItemDetail;
@@ -987,7 +1017,7 @@ export interface ItemDetailMap {
   "/items/rainbow_sword": ItemDetail;
   "/items/ranged_coffee": ItemDetail;
   "/items/ranger_necklace": ItemDetail;
-  "/items/red_chefs_hat": ItemDetail;
+  "/items/red_culinary_hat": ItemDetail;
   "/items/red_panda_fluff": ItemDetail;
   "/items/red_tea_leaf": ItemDetail;
   "/items/redwood_bow": ItemDetail;
@@ -1114,9 +1144,12 @@ export interface ItemDetailMap {
   "/items/sylvan_aura": ItemDetail;
   "/items/tailoring_essence": ItemDetail;
   "/items/tailoring_tea": ItemDetail;
+  "/items/tailors_bottoms": ItemDetail;
+  "/items/tailors_top": ItemDetail;
   "/items/task_crystal": ItemDetail;
   "/items/task_token": ItemDetail;
   "/items/taunt": ItemDetail;
+  "/items/thread_of_expertise": ItemDetail;
   "/items/tome_of_healing": ItemDetail;
   "/items/tome_of_the_elements": ItemDetail;
   "/items/toughness": ItemDetail;
