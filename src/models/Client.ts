@@ -512,6 +512,8 @@ export interface ItemDetailMap {
   "/items/alchemy_tea": ItemDetail;
   "/items/amber": ItemDetail;
   "/items/amethyst": ItemDetail;
+  "/items/anchorbound_plate_body": ItemDetail;
+  "/items/anchorbound_plate_legs": ItemDetail;
   "/items/apple": ItemDetail;
   "/items/apple_gummy": ItemDetail;
   "/items/apple_yogurt": ItemDetail;
@@ -586,7 +588,9 @@ export interface ItemDetailMap {
   "/items/blackberry": ItemDetail;
   "/items/blackberry_cake": ItemDetail;
   "/items/blackberry_donut": ItemDetail;
+  "/items/blazing_trident": ItemDetail;
   "/items/blessed_tea": ItemDetail;
+  "/items/blooming_trident": ItemDetail;
   "/items/blue_key_fragment": ItemDetail;
   "/items/blueberry": ItemDetail;
   "/items/blueberry_cake": ItemDetail;
@@ -693,6 +697,8 @@ export interface ItemDetailMap {
   "/items/colossus_plate_legs": ItemDetail;
   "/items/cooking_essence": ItemDetail;
   "/items/cooking_tea": ItemDetail;
+  "/items/corsair_crest": ItemDetail;
+  "/items/corsair_helmet": ItemDetail;
   "/items/cotton": ItemDetail;
   "/items/cotton_boots": ItemDetail;
   "/items/cotton_fabric": ItemDetail;
@@ -744,6 +750,7 @@ export interface ItemDetailMap {
   "/items/cursed_bow": ItemDetail;
   "/items/dairyhands_bottoms": ItemDetail;
   "/items/dairyhands_top": ItemDetail;
+  "/items/damaged_anchor": ItemDetail;
   "/items/dark_key_fragment": ItemDetail;
   "/items/defense_coffee": ItemDetail;
   "/items/demonic_core": ItemDetail;
@@ -801,10 +808,12 @@ export interface ItemDetailMap {
   "/items/foragers_top": ItemDetail;
   "/items/foraging_essence": ItemDetail;
   "/items/foraging_tea": ItemDetail;
+  "/items/fracturing_impact": ItemDetail;
   "/items/frenzy": ItemDetail;
   "/items/frost_sphere": ItemDetail;
   "/items/frost_staff": ItemDetail;
   "/items/frost_surge": ItemDetail;
+  "/items/furious_spear": ItemDetail;
   "/items/garnet": ItemDetail;
   "/items/gathering_tea": ItemDetail;
   "/items/gator_vest": ItemDetail;
@@ -889,11 +898,16 @@ export interface ItemDetailMap {
   "/items/jungle_essence": ItemDetail;
   "/items/knights_aegis": ItemDetail;
   "/items/knights_ingot": ItemDetail;
+  "/items/kraken_chaps": ItemDetail;
+  "/items/kraken_fang": ItemDetail;
+  "/items/kraken_leather": ItemDetail;
+  "/items/kraken_tunic": ItemDetail;
   "/items/large_artisans_crate": ItemDetail;
   "/items/large_meteorite_cache": ItemDetail;
   "/items/large_pouch": ItemDetail;
   "/items/large_treasure_chest": ItemDetail;
   "/items/liberica_coffee_bean": ItemDetail;
+  "/items/life_drain": ItemDetail;
   "/items/linen_boots": ItemDetail;
   "/items/linen_fabric": ItemDetail;
   "/items/linen_gloves": ItemDetail;
@@ -909,6 +923,9 @@ export interface ItemDetailMap {
   "/items/luna_robe_bottoms": ItemDetail;
   "/items/luna_robe_top": ItemDetail;
   "/items/luna_wing": ItemDetail;
+  "/items/maelstrom_plate_body": ItemDetail;
+  "/items/maelstrom_plate_legs": ItemDetail;
+  "/items/maelstrom_plating": ItemDetail;
   "/items/magic_coffee": ItemDetail;
   "/items/magicians_cloth": ItemDetail;
   "/items/magicians_hat": ItemDetail;
@@ -922,6 +939,8 @@ export interface ItemDetailMap {
   "/items/marine_chaps": ItemDetail;
   "/items/marine_scale": ItemDetail;
   "/items/marine_tunic": ItemDetail;
+  "/items/marksman_bracers": ItemDetail;
+  "/items/marksman_brooch": ItemDetail;
   "/items/marsberry": ItemDetail;
   "/items/marsberry_cake": ItemDetail;
   "/items/marsberry_donut": ItemDetail;
@@ -961,6 +980,11 @@ export interface ItemDetailMap {
   "/items/philosophers_ring": ItemDetail;
   "/items/philosophers_stone": ItemDetail;
   "/items/pincer_gloves": ItemDetail;
+  "/items/pirate_chest": ItemDetail;
+  "/items/pirate_chest_key": ItemDetail;
+  "/items/pirate_entry_key": ItemDetail;
+  "/items/pirate_essence": ItemDetail;
+  "/items/pirate_token": ItemDetail;
   "/items/plum": ItemDetail;
   "/items/plum_gummy": ItemDetail;
   "/items/plum_yogurt": ItemDetail;
@@ -1049,6 +1073,7 @@ export interface ItemDetailMap {
   "/items/ring_of_rare_find": ItemDetail;
   "/items/ring_of_regeneration": ItemDetail;
   "/items/ring_of_resistance": ItemDetail;
+  "/items/rippling_trident": ItemDetail;
   "/items/robusta_coffee_bean": ItemDetail;
   "/items/rough_boots": ItemDetail;
   "/items/rough_bracers": ItemDetail;
@@ -1066,6 +1091,7 @@ export interface ItemDetailMap {
   "/items/royal_water_robe_top": ItemDetail;
   "/items/scratch": ItemDetail;
   "/items/shard_of_protection": ItemDetail;
+  "/items/shield_bash": ItemDetail;
   "/items/shoebill_feather": ItemDetail;
   "/items/shoebill_shoes": ItemDetail;
   "/items/sighted_bracers": ItemDetail;
