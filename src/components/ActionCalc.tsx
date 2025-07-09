@@ -205,7 +205,7 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
   const vendorTotal = rowData.reduce(
     (acc, val) => {
       if (!val) return acc;
-      acc + val.sellPrice * val.count},
+      return acc + val.sellPrice * val.count},
     0
   );
 
@@ -233,7 +233,7 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
   const overrideTotal = rowData.reduce(
     (acc, val) => {
       if (!val) return acc;
-      acc + getApproxValue(val.hrid) * val.count},
+      return acc + getApproxValue(val.hrid) * val.count},
     0
   );
 
@@ -241,6 +241,7 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
   const outputCost = getApproxValue(outputItem.hrid);
 
   const rows = rowData.map((x, i) => {
+    if (!x) return;
     if (x.hrid === "/items/coin") {
       return (
         <tr key={x.hrid + i}>
