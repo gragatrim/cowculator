@@ -19,9 +19,33 @@ interface Props {
 }
 
 export default function ActionCalc({ action, fromRaw = false, data }: Props) {
+  const GUZZ_LEVEL_MULTIPLIERS: number[] = [
+  0.1,          // index 0 unused so level == index
+  0.1020,    // +1  (2.0 %)
+  0.1042,    // +2  (4.2 %)
+  0.1066,    // +3  (6.6 %)
+  0.1092,    // +4  (9.2 %)
+  0.1120,    // +5  (12.0 %)
+  0.1150,    // +6  (15.0 %)
+  0.1182,    // +7  (18.2 %)
+  0.1216,    // +8  (21.6 %)
+  0.1252,    // +9  (25.2 %)
+  0.1290,    // +10 (29.0 %)
+  0.1330,    // +11 (33.0 %)
+  0.1372,    // +12 (37.2 %)
+  0.1416,    // +13 (41.6 %)
+  0.1462,    // +14 (46.2 %)
+  0.1510,    // +15 (51.0 %)
+  0.1560,    // +16 (56.0 %)
+  0.1612,    // +17 (61.2 %)
+  0.1666,    // +18 (66.6 %)
+  0.1722,    // +19 (72.2 %)
+  0.1780     // +20 (78.0 %)
+];
   const [priceOverrides, setPriceOverrides] = useState<{
     [key: string]: number | "";
   }>({});
+  const [guzzLevel, setGuzzLevel] = useState<number | "">("");   // "" = empty field
   const [teas, setTeas] = useState<string[]>([]);
   const availableTeas = Object.values(data.itemDetails)
     .filter((x) => x.consumableDetail.usableInActionTypeMap?.[action.type])
@@ -40,7 +64,7 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
   const wisdomTeaBonus = teas.some((x) => x === "/items/wisdom_tea") ? 1.12 : 1;
   const gourmetBonus = teas.some((x) => x === "/items/gourmet_tea") ? 1.12 : 1;
 
-  const outputItem = {
+  var outputItem = {
     ...data.itemDetails[action.outputItems[0].itemHrid],
     count: action.outputItems[0].count,
   };
@@ -50,7 +74,16 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
   }
 
   let inputs: Cost[] = action.inputItems.slice();
+  let action_type = action.hrid.substring(0, action.hrid.lastIndexOf('/')) + "/";
   let upgradeHrid = action.upgradeItemHrid;
+  let upgradeHrids = [];
+  for (const input of inputs) {
+    var key = `${action_type.endsWith("/") ? action_type.slice(0, -1) : action_type}/${input.itemHrid.substring(input.itemHrid.lastIndexOf('/') + 1)}`;
+    const exists = Object.prototype.hasOwnProperty.call(data.actionDetails, key);
+    if (exists) {
+      upgradeHrids.push([input.itemHrid, input.count]);
+    }
+  };
   const actions = [action];
 
   while (fromRaw && upgradeHrid) {
@@ -62,12 +95,47 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
       .concat([newItem])
       .join("/");
     const newAction = data.actionDetails[newActionHrid];
+    if (newAction === undefined) {
+      break;
+    }
     if (newAction.inputItems) {
       inputs = inputs.concat(newAction.inputItems);
       actions.push(newAction);
     }
 
     upgradeHrid = newAction.upgradeItemHrid;
+  }
+
+  var input_counts = [];
+  var expanded_items = [];
+  for (var upgrade_item of upgradeHrids) {
+    var upgrade_hrid = upgrade_item[0];
+    if (fromRaw) {
+      expanded_items[upgrade_hrid] = true;
+    }
+    while (fromRaw && upgrade_hrid) {
+      const newItem = upgrade_hrid.split("/").pop();
+      if (!newItem) break;
+      const newActionHrid = action.hrid
+        .split("/")
+        .slice(0, -1)
+        .concat([newItem])
+        .join("/");
+      const newAction = data.actionDetails[newActionHrid];
+      if (newAction.inputItems) {
+        for (var item of newAction.inputItems) {
+          if (input_counts[item.itemHrid]) {
+            input_counts[item.itemHrid] += item.count * upgrade_item[1];
+          } else {
+            input_counts[item.itemHrid] = item.count * upgrade_item[1];
+          }
+        }
+        inputs = inputs.concat(newAction.inputItems);
+        actions.push(newAction);
+      }
+
+      upgrade_hrid = newAction.upgradeItemHrid;
+    }
   }
 
   const totalExp = actions.reduce(
@@ -80,11 +148,25 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
     0
   );
 
-  const rowData = inputs.map((x) => {
-    return {
-      ...data.itemDetails[x.itemHrid],
-      count: hasArtisan ? x.count * 0.9 : x.count,
-    };
+  var entries = [];
+  var rowData = inputs.map((x) => {
+    var artisan_modify = 0.1;
+    var artisan_value = 1 - artisan_modify;
+    if (typeof guzzLevel === "number") {
+      var guzz_modifier = 1 + GUZZ_LEVEL_MULTIPLIERS[guzzLevel];
+      artisan_value = 1 - artisan_modify * guzz_modifier;
+    }
+    if (entries[x.itemHrid] === undefined) {
+      entries[x.itemHrid] = true;
+      var modified_count = hasArtisan ? x.count * artisan_value : x.count;
+      if (input_counts[x.itemHrid] !== undefined) {
+        modified_count = hasArtisan ? input_counts[x.itemHrid] * artisan_value : input_counts[x.itemHrid];
+      }
+      return {
+        ...data.itemDetails[x.itemHrid],
+        count: modified_count,
+      };
+    }
   });
 
   if (upgradeHrid) {
@@ -94,7 +176,18 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
     });
   }
 
+  var clean = rowData.filter(
+    (v): v is Row => v !== undefined           // type-guard narrows to Row
+  );
+
+  var filtered = clean.filter(item => expanded_items[item.hrid] !== true);
+
+  rowData = filtered;
+
   const askTotal = rowData.reduce((acc, val) => {
+    if (val === undefined) {
+      return;
+    }
     if (val.hrid === "/items/coin") return acc + val.count;
     if (val.ask < 1) return acc;
     return acc + (val.ask ?? 0) * val.count;
@@ -111,6 +204,9 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
   );
 
   const getApproxValue = (hrid: string): number => {
+    if(hrid === undefined) {
+      return 0;
+    }
     if (hrid === "/items/coin") return 1;
 
     if (priceOverrides[hrid]) return +priceOverrides[hrid];
@@ -212,6 +308,12 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
           maxSelectedValues={3}
         />
       </Tooltip>
+      <NumberInput
+        hideControls
+        value={guzzLevel}
+        label="Guzz Pouch Level"
+        onChange={(v) => setGuzzLevel(v)}
+      />
       <Grid>
         <Grid.Col span={10}>
           <Table

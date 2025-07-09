@@ -1,26 +1,42 @@
-import { createDbWorker } from "sql.js-httpvfs"
-
-// WASM + WebWorker shit
-const workerUrl = new URL("sql.js-httpvfs/dist/sqlite.worker.js", import.meta.url);
-const wasmUrl = new URL("sql.js-httpvfs/dist/sql-wasm.wasm", import.meta.url);
-
-// DB Config
-const config: any = [{
-  from: "inline",
-  config: {
-    serverMode: "full", // file is just a plain old full sqlite database
-    requestChunkSize: 4096, // the page size of the  sqlite database (by default 4096)
-    url: "https://holychikenz.github.io/MWIApi/market.db" // url to the database (relative or full)
-  }
-}];
-
-const worker: any = await createDbWorker(config, workerUrl.toString(), wasmUrl.toString());
-const LIMIT_RECORDS = 48 * 7;
-
-export function getHistoricalData(item_name: string) {
-  return worker.db.exec(`SELECT DATETIME(a.time, "unixepoch") AS time, a."${item_name}" AS ask, b."${item_name}" AS bid, a."${item_name}" - b."${item_name}" AS spread FROM ask a JOIN bid b ON a.time = b.time ORDER BY time DESC LIMIT ${LIMIT_RECORDS}`);
+// One API call returns the *current* top ask & bid for every item.
+// The response shape is:
+//
+// {
+//   "timestamp": 1718805000,          // unix seconds
+//   "items": {
+//      "iron_ore": { "ask": 42.1, "bid": 40.9 },
+//      "iron_bar": { "ask": 89.9, "bid": 87.3 },
+//      ...
+//   }
+// }
+export interface Snapshot {
+  timestamp: number;
+  items: Record<
+    string,
+    {
+      ask: number;
+      bid: number;
+    }
+  >;
 }
 
-export default async function queryMarket(sql: any, params: any) {
-  return worker.db.exec(sql, params);
+const API_URL =
+  "https://www.milkywayidle.com/game_data/marketplace.json" as const;
+
+let cached: Snapshot | null = null;
+
+/** download once per load, reuse afterwards */
+export async function loadSnapshot(): Promise<Snapshot> {
+  if (cached) return cached;
+  const res = await fetch(API_URL, { cache: "no-store" });
+  if (!res.ok)
+    throw new Error(`Market API returned ${res.status} ${res.statusText}`);
+  cached = (await res.json()) as Snapshot;
+  return cached;
+}
+
+/** Convenience: return {ask,bid} for one item or undefined if not found */
+export async function getMarketPrice(item: string) {
+  const snap = await loadSnapshot();
+  return snap.items[item] ?? undefined;
 }
