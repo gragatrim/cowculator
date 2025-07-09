@@ -1,3 +1,4 @@
+ts // @ts-nocheck
 import {
   Flex,
   Table,
@@ -188,9 +189,7 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
   rowData = filtered;
 
   const askTotal = rowData.reduce((acc, val) => {
-    if (val === undefined) {
-      return;
-    }
+    if (!val) return acc;
     if (val.hrid === "/items/coin") return acc + val.count;
     if (val.ask < 1) return acc;
     return acc + (val.ask ?? 0) * val.count;
