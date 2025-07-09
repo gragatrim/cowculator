@@ -75,8 +75,8 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
 
   let inputs: Cost[] = action.inputItems.slice();
   let action_type = action.hrid.substring(0, action.hrid.lastIndexOf('/')) + "/";
-  let upgradeHrid = action.upgradeItemHrid;
-  let upgradeHrids = [];
+  let upgradeHrid: string = action.upgradeItemHrid ?? "";
+  const upgradeHrids: Array<[string, number]> = [];
   for (const input of inputs) {
     var key = `${action_type.endsWith("/") ? action_type.slice(0, -1) : action_type}/${input.itemHrid.substring(input.itemHrid.lastIndexOf('/') + 1)}`;
     const exists = Object.prototype.hasOwnProperty.call(data.actionDetails, key);
@@ -103,13 +103,15 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
       actions.push(newAction);
     }
 
-    upgradeHrid = newAction.upgradeItemHrid;
+    upgradeHrid = newAction.upgradeItemHrid ?? "";
   }
 
-  var input_counts = [];
-  var expanded_items = [];
-  for (var upgrade_item of upgradeHrids) {
-    var upgrade_hrid = upgrade_item[0];
+  /** running total of how many of each input we need */
+  const input_counts: Record<string, number> = {};
+  /** tracks which actions we have already expanded */
+  const expanded_items: Record<string, boolean> = {};
+  for (const upgrade_item of upgradeHrids) {
+    let upgrade_hrid: string = upgrade_item[0];
     if (fromRaw) {
       expanded_items[upgrade_hrid] = true;
     }
@@ -148,7 +150,7 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
     0
   );
 
-  var entries = [];
+  const entries: Record<string, boolean> = {};
   var rowData = inputs.map((x) => {
     var artisan_modify = 0.1;
     var artisan_value = 1 - artisan_modify;
