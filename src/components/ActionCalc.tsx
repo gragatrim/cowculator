@@ -197,12 +197,15 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
   }, 0);
 
   const bidTotal = rowData.reduce((acc, val) => {
+    if (!val) return acc;
     if (val.hrid === "/items/coin") return acc + val.count;
     return acc + Math.max(val.bid, val.sellPrice) * val.count;
   }, 0);
 
   const vendorTotal = rowData.reduce(
-    (acc, val) => acc + val.sellPrice * val.count,
+    (acc, val) => {
+      if (!val) return acc;
+      acc + val.sellPrice * val.count},
     0
   );
 
@@ -228,7 +231,9 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
   };
 
   const overrideTotal = rowData.reduce(
-    (acc, val) => acc + getApproxValue(val.hrid) * val.count,
+    (acc, val) => {
+      if (!val) return acc;
+      acc + getApproxValue(val.hrid) * val.count},
     0
   );
 
