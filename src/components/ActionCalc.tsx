@@ -179,8 +179,9 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
   }
 
   var clean = rowData.filter(
-    (v): v is Row => v !== undefined           // type-guard narrows to Row
+    (v): v is NonNullable<(typeof rowData)[number]> => v !== undefined
   );
+
 
   var filtered = clean.filter(item => expanded_items[item.hrid] !== true);
 
