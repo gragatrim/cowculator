@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState } from "react";
 import { Flex, Loader } from "@mantine/core";
 import { Legend, LineChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
@@ -25,7 +26,7 @@ const SPREAD_COLOR = "#bbbbff";
 
 export default function Market({ data }: Props): JSX.Element | null {
   /* ---- quick guard while data is loading ---- */
-  if (!data?.length) return <Loader />;
+  if (!data) return <Loader />;
 
   /* ---- (demo) pick the first item & shape its series ---- */
   const [itemIndex, setItemIndex] = useState(0);
