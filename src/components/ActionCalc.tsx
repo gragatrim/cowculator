@@ -1,4 +1,3 @@
-ts // @ts-nocheck
 import {
   Flex,
   Table,

@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
 import { Flex, Loader } from "@mantine/core";
 import { Legend, LineChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import ItemDropdown from "./ItemDropdown";
 import {ApiData} from "../services/ApiService";
 
 interface Props {
-  data: ApiData;
+  data: ApiData[];
 }
 
 const shapeData = (data: any) => {
