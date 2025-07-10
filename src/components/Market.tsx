@@ -1,10 +1,11 @@
+import { useState } from "react";
 import { Flex, Loader } from "@mantine/core";
 import { Legend, LineChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import ItemDropdown from "./ItemDropdown";
 import {ApiData} from "../services/ApiService";
 
 interface Props {
-  data: ApiData[];
+  data: ApiData;
 }
 
 const shapeData = (data: any) => {
@@ -33,7 +34,9 @@ export default function Market({ data }: Props): JSX.Element | null {
   return (
     <Flex direction="column" gap="sm">
       <ItemDropdown
-        items={data.map((d) => d.item)}
+        items={data.map((d) => {
+          if (!d) return;
+          return d.item})}
         value={itemIndex}
         onChange={setItemIndex}
       />
