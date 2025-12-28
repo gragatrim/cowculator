@@ -139,7 +139,7 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
       if (newAction !== undefined) {
         upgrade_hrid = newAction.upgradeItemHrid;
       } else {
-        upgrade_hrid = "";
+        upgrade_hrid = undefined
       }
     }
   }
