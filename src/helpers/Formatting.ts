@@ -8,3 +8,14 @@ export function getFriendlyIntString(
     maximumFractionDigits: digits,
   });
 }
+
+export function getFriendlyIntStringRate(
+  num: number | undefined,
+  digits = 3,
+): string {
+  if (num === 0) return "0";
+  if (!num) return "-1";
+  return num.toLocaleString(undefined, {
+    maximumFractionDigits: digits,
+  });
+}

@@ -22,10 +22,14 @@ export interface ClientResponse {
   actionTypeDetailMap: { [key: string]: ActionTypeDetailMap };
   actionCategoryDetailMap: { [key: string]: ActionCategoryDetailMap };
   buffTypeDetailMap: { [key: string]: BuffTypeDetailMap };
-  cowbellBundleDetailMap: { [key: string]: CowbellBundleDetailMap };
+  cowbellBundleDetailMap?: { [key: string]: CowbellBundleDetailMap };
   buyableUpgradeDetailMap: { [key: string]: BuyableUpgradeDetailMap };
   chatIconDetailMap: { [key: string]: ChatIconDetailMap };
   communityBuffTypeDetailMap: CommunityBuffTypeDetailMap;
+  combatMonsterDetailMap: { [key: string]: CombatMonsterDetail };
+  openableLootDropMap: { [key: string]: OpenableLootDropMap[] };
+  shopItemDetailMap: { [key: string]: ShopItemDetail };
+  shopCategoryDetailMap: { [key: string]: ActionCategoryDetailMap };
 }
 
 export interface AbilityDetailMap {
@@ -144,15 +148,20 @@ export interface ActionDetailMap {
   type: ActionType;
   category: string;
   name: string;
+  maxDifficulty?: number;
   levelRequirement: LevelRequirement;
   baseTimeCost: number;
   experienceGain: ExperienceGain;
   dropTable: DropTable[] | null;
+  essenceDropTable?: DropTable[] | null;
   rareDropTable: DropTable[] | null;
   upgradeItemHrid: string;
+  retainAllEnhancement?: boolean;
   inputItems: Cost[] | null;
   outputItems: Cost[] | null;
   combatZoneInfo: CombatZoneInfo | null;
+  maxPartySize?: number;
+  buffs?: Buff[] | null;
   sortIndex: number;
 }
 
@@ -211,6 +220,15 @@ export interface CombatZoneInfo {
 
 export interface FightInfo {
   randomSpawnInfo: RandomSpawnInfo;
+  bossSpawns: BossSpawn[] | null;
+  battlesPerBoss: number | null;
+}
+
+export interface BossSpawn {
+  combatMonsterHrid: string;
+  difficultyTier: number;
+  rate: number;
+  strength: number;
 }
 
 export interface RandomSpawnInfo {
@@ -223,6 +241,38 @@ export interface Spawn {
   combatMonsterHrid: string;
   rate: number;
   strength: number;
+}
+
+export interface CombatMonsterDetail {
+  hrid: string;
+  name: string;
+  enrageTime: number;
+  experience: number;
+  combatDetails: unknown;
+  abilities: MonsterAbility[];
+  dropTable: DropTable[] | null;
+  rareDropTable: DropTable[] | null;
+}
+
+export interface MonsterAbility {
+  abilityHrid: string;
+  level: number;
+  minDifficultyTier: number;
+}
+
+export interface ShopItemDetail {
+  hrid: string;
+  category: string;
+  itemHrid: string;
+  costs: Cost[];
+  sortIndex: number;
+}
+
+export interface OpenableLootDropMap {
+  itemHrid: string;
+  dropRate: number;
+  minCount: number;
+  maxCount: number;
 }
 
 export enum ActionType {
@@ -1264,14 +1314,16 @@ export interface ItemDetail {
   description: string;
   categoryHrid: CategoryHrid;
   sellPrice: number;
-  isTradable: boolean;
-  isOpenable: boolean;
+  isTradable?: boolean;
+  isOpenable?: boolean;
   itemLevel: number;
-  enhancementCosts: Cost[] | null;
-  protectionItemHrids: string[] | null;
-  equipmentDetail: EquipmentDetail;
-  consumableDetail: ConsumableDetail;
-  abilityBookDetail: AbilityBookDetail;
+  enhancementCosts?: Cost[] | null;
+  protectionItemHrids?: string[] | null;
+  equipmentDetail?: EquipmentDetail | null;
+  consumableDetail?: ConsumableDetail | null;
+  abilityBookDetail?: AbilityBookDetail | null;
+  alchemyDetail?: unknown;
+  openableDetail?: unknown;
   sortIndex: number;
 }
 
@@ -1302,12 +1354,12 @@ export interface ConsumableDetail {
 }
 
 export interface EquipmentDetail {
-  type: EquipmentDetailType;
-  levelRequirements: LevelRequirement[] | null;
-  combatStats: Combat;
-  noncombatStats: { [key: string]: number };
-  combatEnhancementBonuses: Combat;
-  noncombatEnhancementBonuses: { [key: string]: number };
+  type?: EquipmentDetailType;
+  levelRequirements?: LevelRequirement[] | null;
+  combatStats?: Partial<Combat> | { [key: string]: number };
+  noncombatStats?: { [key: string]: number };
+  combatEnhancementBonuses?: Partial<Combat> | { [key: string]: number };
+  noncombatEnhancementBonuses?: { [key: string]: number };
 }
 
 export enum EquipmentDetailType {

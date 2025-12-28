@@ -49,7 +49,7 @@ export default function Character({ data }: Props) {
             .filter(
               (y) =>
                 y.categoryHrid === CategoryHrid.ItemCategoriesEquipment &&
-                y.equipmentDetail.levelRequirements?.some(
+                y.equipmentDetail?.levelRequirements?.some(
                   (z) => z.skillHrid === x.hrid
                 )
             )
@@ -79,11 +79,18 @@ export default function Character({ data }: Props) {
         ? `enhancingSuccess`
         : `${x.name.toLowerCase()}Speed`;
 
-    const toolBonus = tool
-      ? tool.equipmentDetail.noncombatStats[bonusFieldName] +
-        tool.equipmentDetail.noncombatEnhancementBonuses[bonusFieldName] *
-          data.enhancementLevelTotalBonusMultiplierTable[toolLevel ?? 0]
-      : 0;
+    const nonCombatStats =
+      (tool?.equipmentDetail?.noncombatStats as Record<string, number>) ?? {};
+    const nonCombatBonus =
+      (tool?.equipmentDetail?.noncombatEnhancementBonuses as Record<
+        string,
+        number
+      >) ?? {};
+
+    const toolBonus =
+      (nonCombatStats[bonusFieldName] ?? 0) +
+      (nonCombatBonus[bonusFieldName] ?? 0) *
+        data.enhancementLevelTotalBonusMultiplierTable[toolLevel ?? 0];
 
     return (
       <tr key={`character${x.hrid}`}>
