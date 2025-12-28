@@ -1,5 +1,5 @@
 export interface MarketResponse {
-  market: { [key: string]: MarketValue };
+  marketData: { [key: string]: MarketValue };
   time: number;
 }
 

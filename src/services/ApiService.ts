@@ -24,7 +24,7 @@ export interface ApiData {
 const getApiData = async (): Promise<ApiData> => {
   const marketData = await getMarketData();
 
-  const clientData = rawData as ClientResponse;
+  const clientData = rawData as unknown as ClientResponse;
 
   const itemDetails: { [key: string]: ItemDetail & MarketValue } = {};
 
