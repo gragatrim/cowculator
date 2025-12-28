@@ -6,14 +6,6 @@ import Icon from "./Icon";
 import { getFriendlyIntString } from "../helpers/Formatting";
 import { Skill, getActionSeconds, getTeaBonuses } from "../helpers/CommonFunctions";
 
-// Fallback exports for dungeon key cost table used by CombatTable.
-// These are placeholders to avoid build-time missing exports; they can be
-// wired to real values in the future.
-export const exportInputCostChimerical = 0;
-export const exportInputCostEnchanted = 0;
-export const exportInputCostSinister = 0;
-export const exportMarketRows: JSX.Element[] = [];
-
 interface Props {
   actionCategory: string;
   data: ApiData;
@@ -42,10 +34,6 @@ export default function Materials({
   const [priceOverrides, setPriceOverrides] = useState<{
     [key: string]: number | "";
   }>({});
-  const getPriceOverride = (hrid: string) => {
-    const override = priceOverrides[hrid];
-    return override === "" || override === undefined ? undefined : override;
-  };
 
   const {
     wisdomTeaBonus,
@@ -84,8 +72,7 @@ export default function Materials({
   const getApproxValue = (hrid: string): number => {
     if (hrid === "/items/coin") return 1;
 
-    const override = getPriceOverride(hrid);
-    if (override !== undefined) return override;
+    if (priceOverrides[hrid]) return +priceOverrides[hrid];
 
     const item = data.itemDetails[hrid];
 

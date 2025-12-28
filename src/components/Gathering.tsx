@@ -31,10 +31,6 @@ export default function Gathering({ type, data, skill }: Props) {
   const [priceOverrides, setPriceOverrides] = useState<{
     [key: string]: number | "";
   }>({});
-  const getPriceOverride = (hrid: string) => {
-    const override = priceOverrides[hrid];
-    return override === "" || override === undefined ? undefined : override;
-  };
 
   const {
     levelTeaBonus,
@@ -47,7 +43,7 @@ export default function Gathering({ type, data, skill }: Props) {
   const effectiveLevel = level + levelTeaBonus;
 
   const availableTeas = Object.values(data.itemDetails)
-    .filter((x) => x.consumableDetail?.usableInActionTypeMap?.[type])
+    .filter((x) => x.consumableDetail.usableInActionTypeMap?.[type])
     .map((x) => ({
       label: x.name,
       value: x.hrid,
@@ -90,8 +86,7 @@ export default function Gathering({ type, data, skill }: Props) {
   const getApproxValue = (hrid: string): number => {
     if (hrid === "/items/coin") return 1;
 
-    const override = getPriceOverride(hrid);
-    if (override !== undefined) return override;
+    if (priceOverrides[hrid]) return +priceOverrides[hrid];
 
     const item = data.itemDetails[hrid];
 

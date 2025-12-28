@@ -35,10 +35,6 @@ export default function EnhancingCalc({
   const [priceOverrides, setPriceOverrides] = useState<{
     [key: string]: number | "";
   }>({});
-  const getPriceOverride = (hrid: string) => {
-    const override = priceOverrides[hrid];
-    return override === "" || override === undefined ? undefined : override;
-  };
 
   const blessedTeaBonus = teas.some((x) => x === "/items/blessed_tea")
     ? 0.01
@@ -61,8 +57,7 @@ export default function EnhancingCalc({
   const getApproxValue = (hrid: string): number => {
     if (hrid === "/items/coin") return 1;
 
-    const override = getPriceOverride(hrid);
-    if (override !== undefined) return override;
+    if (priceOverrides[hrid]) return +priceOverrides[hrid];
 
     const item = data.itemDetails[hrid];
 
