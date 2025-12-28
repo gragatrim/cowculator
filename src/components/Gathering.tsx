@@ -31,6 +31,10 @@ export default function Gathering({ type, data, skill }: Props) {
   const [priceOverrides, setPriceOverrides] = useState<{
     [key: string]: number | "";
   }>({});
+  const getPriceOverride = (hrid: string) => {
+    const override = priceOverrides[hrid];
+    return override === "" || override === undefined ? undefined : override;
+  };
 
   const {
     levelTeaBonus,
@@ -86,7 +90,8 @@ export default function Gathering({ type, data, skill }: Props) {
   const getApproxValue = (hrid: string): number => {
     if (hrid === "/items/coin") return 1;
 
-    if (priceOverrides[hrid]) return +priceOverrides[hrid];
+    const override = getPriceOverride(hrid);
+    if (override !== undefined) return override;
 
     const item = data.itemDetails[hrid];
 

@@ -52,25 +52,29 @@ interface Props {
   data: ApiData;
   action: string;
   kph: number;
-  withLuckyCoffee: boolean;
-  combatBuffLevel: number;
-  partyAmount: number;
-  dungeon: boolean;
+  withLuckyCoffee?: boolean;
+  combatBuffLevel?: number;
+  partyAmount?: number;
+  dungeon?: boolean;
 }
 
 export default function CombatTable({
   action,
   data,
   kph,
-  withLuckyCoffee,
-  combatBuffLevel,
-  partyAmount,
-  dungeon,
+  withLuckyCoffee = false,
+  combatBuffLevel = 0,
+  partyAmount = 1,
+  dungeon = false,
 }: Props) {
   const [priceOverrides, setPriceOverrides] = useState<{
     [key: string]: number | "";
   }>({});
   const [fromRaw, setFromRaw] = useState(false);
+  const getPriceOverride = (hrid: string) => {
+    const override = priceOverrides[hrid];
+    return override === "" || override === undefined ? undefined : override;
+  };
   const getRandomEncounter = () => {
     const spawns =
       data.actionDetails[action].combatZoneInfo!.fightInfo.randomSpawnInfo
@@ -273,8 +277,9 @@ export default function CombatTable({
 
   const getItemPrice = (item: MarketValue & ItemDetail): number => {
     if (item.hrid === "/items/coin") return 1;
+    const override = getPriceOverride(item.hrid);
     return (
-      priceOverrides[item.hrid] ||
+      override ??
       Math.round(
         ((item.ask < 1 ? 0 : item.ask) + (item.bid < 1 ? 0 : item.bid)) / 2
       )
@@ -282,11 +287,13 @@ export default function CombatTable({
   };
   const getItemAsk = (item: MarketValue & ItemDetail): number => {
     if (item.hrid === "/items/coin") return 1;
-    return priceOverrides[item.hrid] || item.ask;
+    const override = getPriceOverride(item.hrid);
+    return override ?? item.ask;
   };
   const getItemBid = (item: MarketValue & ItemDetail): number => {
     if (item.hrid === "/items/coin") return 1;
-    return priceOverrides[item.hrid] || item.bid;
+    const override = getPriceOverride(item.hrid);
+    return override ?? item.bid;
   };
   const getDropRateWithCoffee = (dropRate: number) => {
     let resultDropRate = dropRate;
@@ -845,4 +852,3 @@ export default function CombatTable({
     </>
   );
 }
-
