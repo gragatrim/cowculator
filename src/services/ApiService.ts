@@ -29,13 +29,19 @@ const getApiData = async (): Promise<ApiData> => {
   const itemDetails: { [key: string]: ItemDetail & MarketValue } = {};
 
   Object.entries(clientData.itemDetailMap).forEach(([key, value]) => {
-    const m = marketData?.marketData?.[key]?.["0"] ?? {};
+    type RawMarketLevels = Record<string, { a: number; b: number }>;
+
+    const levels =
+      (marketData?.marketData as unknown as Record<string, RawMarketLevels>)?.[key];
+
+    const m: Partial<MarketValue> = levels?.["0"] ?? {};
+
     itemDetails[key] = {
       ...value,
       a: -1,
       b: -1,
-      vendor: value.sellPrice,  // default vendor
-      ...m,                     // overwrite a/b if present; no vendor here so default remains
+      vendor: value.sellPrice, // default vendor
+      ...m,                    // overwrite a/b if present
     };
   });
 
