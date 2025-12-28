@@ -57,7 +57,7 @@ const getApiData = async (): Promise<ApiData> => {
   return result;
 };
 
-export const getMarketData = (useMedian = true) => {
+export const getMarketData = () => {
   return axios.get<MarketResponse>(`https://www.milkywayidle.com/game_data/marketplace.json`,
   ).then((x) => x.data);
 };

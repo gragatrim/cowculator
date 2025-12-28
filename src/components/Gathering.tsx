@@ -43,7 +43,7 @@ export default function Gathering({ type, data, skill }: Props) {
   const effectiveLevel = level + levelTeaBonus;
 
   const availableTeas = Object.values(data.itemDetails)
-    .filter((x) => x.consumableDetail.usableInActionTypeMap?.[type])
+    .filter((x) => x.consumableDetail?.usableInActionTypeMap?.[type])
     .map((x) => ({
       label: x.name,
       value: x.hrid,
@@ -90,14 +90,14 @@ export default function Gathering({ type, data, skill }: Props) {
 
     const item = data.itemDetails[hrid];
 
-    if (item.ask === -1 && item.bid === -1) {
+    if (item.a === -1 && item.b === -1) {
       return item.sellPrice;
-    } else if (item.ask === -1) {
-      return item.bid;
-    } else if (item.bid === -1) {
-      return item.ask;
+    } else if (item.a === -1) {
+      return item.b;
+    } else if (item.b === -1) {
+      return item.a;
     } else {
-      return +((item.ask + item.bid) / 2).toFixed(0);
+      return +((item.a + item.b) / 2).toFixed(0);
     }
   };
 
@@ -145,8 +145,8 @@ export default function Gathering({ type, data, skill }: Props) {
             <Icon hrid={x.hrid} /> {x.name}
           </Flex>
         </td>
-        <td>{x.ask}</td>
-        <td>{x.bid}</td>
+        <td>{x.a}</td>
+        <td>{x.b}</td>
         <td>{x.sellPrice}</td>
         <td>
           <NumberInput

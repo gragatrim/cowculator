@@ -61,14 +61,14 @@ export default function EnhancingCalc({
 
     const item = data.itemDetails[hrid];
 
-    if (item.ask === -1 && item.bid === -1) {
+    if (item.a === -1 && item.b === -1) {
       return item.sellPrice;
-    } else if (item.ask === -1) {
-      return item.bid;
-    } else if (item.bid === -1) {
-      return item.ask;
+    } else if (item.a === -1) {
+      return item.b;
+    } else if (item.b === -1) {
+      return item.a;
     } else {
-      return +((item.ask + item.bid) / 2).toFixed(0);
+      return +((item.a + item.b) / 2).toFixed(0);
     }
   };
 
@@ -243,8 +243,8 @@ export default function EnhancingCalc({
             <Icon hrid={x.itemHrid} /> {marketItem.name}
           </Flex>
         </td>
-        <td>{getFriendlyIntString(marketItem.ask)}</td>
-        <td>{getFriendlyIntString(marketItem.bid)}</td>
+        <td>{getFriendlyIntString(marketItem.a)}</td>
+        <td>{getFriendlyIntString(marketItem.b)}</td>
         <td>{getFriendlyIntString(marketItem.sellPrice)}</td>
       </tr>
     );
@@ -288,8 +288,8 @@ export default function EnhancingCalc({
           </Flex>
         </td>
         <td>{x.count}</td>
-        <td>{getFriendlyIntString(marketItem.ask)}</td>
-        <td>{getFriendlyIntString(marketItem.bid)}</td>
+        <td>{getFriendlyIntString(marketItem.a)}</td>
+        <td>{getFriendlyIntString(marketItem.b)}</td>
         <td>{getFriendlyIntString(marketItem.sellPrice)}</td>
         <td>
           <NumberInput
