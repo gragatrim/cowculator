@@ -1,6 +1,6 @@
 export interface MarketResponse {
   marketData: { [key: string]: MarketValue };
-  time: number;
+  timestamp: number;
 }
 
 export interface MarketValue {
