@@ -29,7 +29,7 @@ const getApiData = async (): Promise<ApiData> => {
   const itemDetails: { [key: string]: ItemDetail & MarketValue } = {};
 
   Object.entries(clientData.itemDetailMap).forEach(([key, value]) => {
-    const m = marketData?.marketData?.[key]?.[0] ?? {};
+    const m = marketData?.marketData?.[key]?.["0"] ?? {};
     itemDetails[key] = {
       ...value,
       a: -1,

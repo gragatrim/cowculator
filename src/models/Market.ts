@@ -1,10 +1,17 @@
-export interface MarketResponse {
-  marketData: { [key: string]: MarketValue };
-  timestamp: number;
+export interface MarketListing {
+  a: number;
+  b: number;
 }
 
 export interface MarketValue {
-  a: number;
-  b: number;
-  vendor: number;
+  [enhancementLevel: string]: MarketListing;
 }
+
+export interface MarketData {
+  [itemHrid: string]: MarketValue;
+}
+
+export interface Marketplace {
+  marketData: MarketData;
+}
+
