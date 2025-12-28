@@ -29,16 +29,19 @@ const getApiData = async (): Promise<ApiData> => {
   const itemDetails: { [key: string]: ItemDetail & MarketValue } = {};
 
   Object.entries(clientData.itemDetailMap).forEach(([key, value]) => {
+    const m = marketData?.marketData?.[key]?.[0] ?? {};
     itemDetails[key] = {
       ...value,
-      ...(marketData?.market?.[value.name] ??
-        { ask: -1, bid: -1, vendor: value.sellPrice }),
+      a: -1,
+      b: -1,
+      vendor: value.sellPrice,  // default vendor
+      ...m,                     // overwrite a/b if present; no vendor here so default remains
     };
   });
 
   const result = {
     gameVersion: clientData.gameVersion,
-    marketTime: marketData?.time ? new Date(marketData.time * 1000) : undefined,
+    marketTime: marketData?.timestamp ? new Date(marketData.timestamp * 1000) : undefined,
     itemDetails,
     actionDetails: clientData.actionDetailMap,
     actionTypeDetails: clientData.actionTypeDetailMap,
@@ -55,8 +58,7 @@ const getApiData = async (): Promise<ApiData> => {
 };
 
 export const getMarketData = (useMedian = true) => {
-  return axios.get<MarketResponse>(`https://raw.githubusercontent.com/holychikenz/MWIApi/main/${useMedian ? "medianmarket" : "milkyapi"
-    }.json`,
+  return axios.get<MarketResponse>(`https://www.milkywayidle.com/game_data/marketplace.json`,
   ).then((x) => x.data);
 };
 

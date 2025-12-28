@@ -14,8 +14,8 @@ export interface Snapshot {
   items: Record<
     string,
     {
-      ask: number;
-      bid: number;
+      a: number;
+      b: number;
     }
   >;
 }

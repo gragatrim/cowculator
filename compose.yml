@@ -7,7 +7,7 @@ services:
     container_name: calc
     command: npm run dev
     ports:
-      - "5173:5173"
+      - "5169:5173"
     volumes:
       - ./:/app
       - /app/node_modules

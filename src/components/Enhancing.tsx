@@ -31,7 +31,7 @@ export default function Enhancing({ data }: Props) {
       Object.values(data.itemDetails)
         .filter(
           (x) =>
-            x.consumableDetail.usableInActionTypeMap?.[ActionType.Enhancing]
+            x.consumableDetail?.usableInActionTypeMap?.[ActionType.Enhancing]
         )
         .map((x) => ({
           label: x.name,

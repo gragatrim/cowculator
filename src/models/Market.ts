@@ -4,7 +4,7 @@ export interface MarketResponse {
 }
 
 export interface MarketValue {
-  ask: number;
-  bid: number;
+  a: number;
+  b: number;
   vendor: number;
 }

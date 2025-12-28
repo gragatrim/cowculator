@@ -31,7 +31,7 @@ export default function ActionCategorySelector({ skill, data, showUpgradeToggle 
   const availableTeas = Object.values(data.itemDetails)
     .filter(
       (x) =>
-        x.consumableDetail.usableInActionTypeMap?.[`/action_types/${skill}`]
+        x.consumableDetail?.usableInActionTypeMap?.[`/action_types/${skill}`]
     )
     .map((x) => ({
       label: x.name,

@@ -43,7 +43,7 @@ export default function Gathering({ type, data, skill }: Props) {
   const effectiveLevel = level + levelTeaBonus;
 
   const availableTeas = Object.values(data.itemDetails)
-    .filter((x) => x.consumableDetail.usableInActionTypeMap?.[type])
+    .filter((x) => x.consumableDetail?.usableInActionTypeMap?.[type])
     .map((x) => ({
       label: x.name,
       value: x.hrid,

@@ -48,7 +48,7 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
   const [guzzLevel, setGuzzLevel] = useState<number | "">("");   // "" = empty field
   const [teas, setTeas] = useState<string[]>([]);
   const availableTeas = Object.values(data.itemDetails)
-    .filter((x) => x.consumableDetail.usableInActionTypeMap?.[action.type])
+    .filter((x) => x.consumableDetail?.usableInActionTypeMap?.[action.type])
     .map((x) => ({
       label: x.name,
       value: x.hrid,
@@ -124,7 +124,7 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
         .concat([newItem])
         .join("/");
       const newAction = data.actionDetails[newActionHrid];
-      if (newAction.inputItems) {
+      if (newAction !== undefined && newAction.inputItems) {
         for (var item of newAction.inputItems) {
           if (input_counts[item.itemHrid]) {
             input_counts[item.itemHrid] += item.count * upgrade_item[1];
@@ -136,7 +136,11 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
         actions.push(newAction);
       }
 
-      upgrade_hrid = newAction.upgradeItemHrid;
+      if (newAction !== undefined) {
+        upgrade_hrid = newAction.upgradeItemHrid;
+      } else {
+        upgrade_hrid = undefined
+      }
     }
   }
 
@@ -190,14 +194,14 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
   const askTotal = rowData.reduce((acc, val) => {
     if (!val) return acc;
     if (val.hrid === "/items/coin") return acc + val.count;
-    if (val.ask < 1) return acc;
-    return acc + (val.ask ?? 0) * val.count;
+    if (val.a < 1) return acc;
+    return acc + (val.a ?? 0) * val.count;
   }, 0);
 
   const bidTotal = rowData.reduce((acc, val) => {
     if (!val) return acc;
     if (val.hrid === "/items/coin") return acc + val.count;
-    return acc + Math.max(val.bid, val.sellPrice) * val.count;
+    return acc + Math.max(val.b, val.sellPrice) * val.count;
   }, 0);
 
   const vendorTotal = rowData.reduce(
@@ -217,14 +221,14 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
 
     const item = data.itemDetails[hrid];
 
-    if (item.ask === -1 && item.bid === -1) {
+    if (item.a === -1 && item.b === -1) {
       return item.sellPrice;
-    } else if (item.ask === -1) {
-      return item.bid;
-    } else if (item.bid === -1) {
-      return item.ask;
+    } else if (item.a === -1) {
+      return item.b;
+    } else if (item.b === -1) {
+      return item.a;
     } else {
-      return +((item.ask + item.bid) / 2).toFixed(0);
+      return +((item.a + item.b) / 2).toFixed(0);
     }
   };
 
@@ -274,8 +278,8 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
           </Flex>
         </td>
         <td>{x.count.toFixed(2)}</td>
-        <td>{getFriendlyIntString(x.ask)}</td>
-        <td>{getFriendlyIntString(x.bid)}</td>
+        <td>{getFriendlyIntString(x.a)}</td>
+        <td>{getFriendlyIntString(x.b)}</td>
         <td>{getFriendlyIntString(x.sellPrice)}</td>
         <td>
           <NumberInput
@@ -362,8 +366,8 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
                   </Flex>
                 </th>
                 <td>{outputCount.toFixed(2)}</td>
-                <td>{getFriendlyIntString(outputItem.ask)}</td>
-                <td>{getFriendlyIntString(outputItem.bid)}</td>
+                <td>{getFriendlyIntString(outputItem.a)}</td>
+                <td>{getFriendlyIntString(outputItem.b)}</td>
                 <td>{getFriendlyIntString(outputItem.sellPrice)}</td>
                 <td>
                   <NumberInput
@@ -381,8 +385,8 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
               </tr>
               <tr>
                 <th colSpan={2}>Total</th>
-                <td>{getFriendlyIntString(outputItem.ask * outputCount)}</td>
-                <td>{getFriendlyIntString(outputItem.bid * outputCount)}</td>
+                <td>{getFriendlyIntString(outputItem.a * outputCount)}</td>
+                <td>{getFriendlyIntString(outputItem.b * outputCount)}</td>
                 <td>
                   {getFriendlyIntString(outputItem.sellPrice * outputCount)}
                 </td>
